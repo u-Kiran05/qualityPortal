@@ -10,11 +10,20 @@
 		"title": "{{appTitle}}",
 		"description": "{{appDescription}}",
 		"sourceTemplate": {
-			"id": "ui5template.basicSAPUI5ApplicationProject",
-			"version": "1.40.12"
+			"id": "servicecatalog.connectivityComponent",
+			"version": "0.0.0"
+		},
+		"dataSources": {
+			"ZPP_QLOGIN_V_CDS": {
+				"uri": "/sap/opu/odata/sap/ZPP_QLOGIN_V_CDS/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/metadata.xml"
+				}
+			}
 		}
 	},
-
 	"sap.ui": {
 		"technology": "UI5",
 		"icons": {
@@ -33,14 +42,13 @@
 		"supportedThemes": [
 			"sap_hcb",
 			"sap_belize"
-
 		]
 	},
-
 	"sap.ui5": {
 		"rootView": {
-			"viewName": "QualityPortal.view.View1",
-			"type": "XML"
+			"viewName": "QualityPortal.view.App",
+			"type": "XML",
+			"id": "app"
 		},
 		"dependencies": {
 			"minUI5Version": "1.30.0",
@@ -54,6 +62,33 @@
 				"sap.uxap": {}
 			}
 		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"viewPath": "QualityPortal.view",
+				"controlId": "app",
+				"controlAggregation": "pages",
+				"transition": "fade",
+				"bypassed": {
+					"target": "View1"
+				},
+				"async": true
+			},
+			"routes": [{
+				"pattern": "",
+				"name": "View1",
+				"target": "View1"
+			}],
+			"targets": {
+				"View1": {
+					"viewId": "View1",
+					"viewName": "View1",
+					"transition": "fade"
+				}
+			}
+		},
+		
 		"contentDensities": {
 			"compact": true,
 			"cozy": true
@@ -67,9 +102,11 @@
 			}
 		},
 		"resources": {
-			"css": [{
-				"uri": "css/style.css"
-			}]
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
 		}
 	}
 }

@@ -1,0 +1,133 @@
+<edmx:Edmx
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZPP_QLOGIN_V_CDS" xml:lang="en" sap:schema-version="1">
+            <EntityType Name="ZPP_QLOGIN_VType" sap:label="QUALITY LOGIN" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="p_bname"/>
+                    <PropertyRef Name="p_pass"/>
+                    <PropertyRef Name="bname"/>
+                </Key>
+                <Property Name="p_bname" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:label="User"/>
+                <Property Name="p_pass" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="DATA ELEMENT SHOP FLOOR PASSWORD"/>
+                <Property Name="bname" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:label="User" sap:quickinfo="User Name in User Master Record"/>
+                <Property Name="pass" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="DATA ELEMENT SHOP FLOOR PASSWORD" sap:heading=""/>
+                <Property Name="login_status" Type="Edm.String" MaxLength="1"/>
+                <NavigationProperty Name="Parameters" Relationship="ZPP_QLOGIN_V_CDS.assoc_294035E4EE4F61859FAA1F07B6E8D783" FromRole="ToRole_assoc_294035E4EE4F61859FAA1F07B6E8D783" ToRole="FromRole_assoc_294035E4EE4F61859FAA1F07B6E8D783" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ZPP_QLOGIN_VParameters" sap:semantics="parameters" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="p_bname"/>
+                    <PropertyRef Name="p_pass"/>
+                </Key>
+                <Property Name="p_bname" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:parameter="mandatory" sap:label="User" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="p_pass" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:parameter="mandatory" sap:label="DATA ELEMENT SHOP FLOOR PASSWORD" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="Set" Relationship="ZPP_QLOGIN_V_CDS.assoc_294035E4EE4F61859FAA1F07B6E8D783" FromRole="FromRole_assoc_294035E4EE4F61859FAA1F07B6E8D783" ToRole="ToRole_assoc_294035E4EE4F61859FAA1F07B6E8D783"/>
+            </EntityType>
+            <Association Name="assoc_294035E4EE4F61859FAA1F07B6E8D783" sap:content-version="1">
+                <End Type="ZPP_QLOGIN_V_CDS.ZPP_QLOGIN_VParameters" Multiplicity="1" Role="FromRole_assoc_294035E4EE4F61859FAA1F07B6E8D783"/>
+                <End Type="ZPP_QLOGIN_V_CDS.ZPP_QLOGIN_VType" Multiplicity="*" Role="ToRole_assoc_294035E4EE4F61859FAA1F07B6E8D783"/>
+            </Association>
+            <EntityContainer Name="ZPP_QLOGIN_V_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="ZPP_QLOGIN_VSet" EntityType="ZPP_QLOGIN_V_CDS.ZPP_QLOGIN_VType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ZPP_QLOGIN_V" EntityType="ZPP_QLOGIN_V_CDS.ZPP_QLOGIN_VParameters" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="assoc_294035E4EE4F61859FAA1F07B6E8D783" Association="ZPP_QLOGIN_V_CDS.assoc_294035E4EE4F61859FAA1F07B6E8D783" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ZPP_QLOGIN_V" Role="FromRole_assoc_294035E4EE4F61859FAA1F07B6E8D783"/>
+                    <End EntitySet="ZPP_QLOGIN_VSet" Role="ToRole_assoc_294035E4EE4F61859FAA1F07B6E8D783"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotation
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.SchemaVersion" String="1.0.0"/>
+                <Annotations
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZPP_QLOGIN_V_CDS.ZPP_QLOGIN_V_CDS_Entities">
+                    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                </Annotations>
+                <Annotations
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZPP_QLOGIN_V_CDS.ZPP_QLOGIN_V_CDS_Entities/ZPP_QLOGIN_V">
+                    <Annotation Term="Capabilities.FilterRestrictions">
+                        <Record>
+                            <PropertyValue Property="NonFilterableProperties">
+                                <Collection>
+                                    <PropertyPath>p_bname</PropertyPath>
+                                    <PropertyPath>p_pass</PropertyPath>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.NavigationRestrictions">
+                        <Record>
+                            <PropertyValue Property="RestrictedProperties">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Parameters"/>
+                                        <PropertyValue Property="FilterRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Filterable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.SortRestrictions">
+                        <Record>
+                            <PropertyValue Property="NonSortableProperties">
+                                <Collection>
+                                    <PropertyPath>p_bname</PropertyPath>
+                                    <PropertyPath>p_pass</PropertyPath>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <atom:link
+                    xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="./sap/ZPP_QLOGIN_V_CDS/$metadata"/>
+                    <atom:link
+                        xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="./sap/ZPP_QLOGIN_V_CDS/$metadata"/>
+                    </Schema>
+                </edmx:DataServices>
+            </edmx:Edmx>

@@ -1,10 +1,37 @@
-<mvc:View controllerName="QualityPortal.controller.View1" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:mvc="sap.ui.core.mvc"
-	displayBlock="true" xmlns="sap.m">
-	<App>
-		<pages>
-			<Page title="{i18n>title}">
-				<content></content>
-			</Page>
-		</pages>
-	</App>
+<mvc:View controllerName="QualityPortal.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    displayBlock="true">
+
+    <Page title="Quality Portal - Login">
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <MessageStrip id="msgStrip"
+                    visible="false"
+                    type="Information"
+                    showIcon="true"
+                    showCloseButton="false"
+                    text="" />
+
+                <f:SimpleForm id="SimpleFormLogin" editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="3" labelSpanL="3" labelSpanM="3"
+                    labelSpanS="12" emptySpanXL="4" emptySpanL="4"
+                    emptySpanM="4" emptySpanS="0"
+                    columnsXL="1" columnsL="1" columnsM="1"
+                    singleContainerFullSize="false">
+                    <f:content>
+                        <Label text="Username*" />
+                        <Input id="username" placeholder="Enter Username" />
+                        <Label text="Password*" />
+                        <Input id="password" type="Password" placeholder="Enter Password" />
+                        <Button text="Login" press="onLoginPress" type="Emphasized" />
+                    </f:content>
+                </f:SimpleForm>
+
+                <Text id="statusText" text="" />
+            </VBox>
+        </content>
+    </Page>
 </mvc:View>
