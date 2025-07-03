@@ -1,0 +1,139 @@
+<edmx:Edmx
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZQM_RESRECORDS_CDS" xml:lang="en" sap:schema-version="1">
+            <EntityType Name="ZQM_RESRECORDSType" sap:label="QUALITY RESULT RECORDS" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="p_plant"/>
+                    <PropertyRef Name="inspection_lot"/>
+                </Key>
+                <Property Name="p_plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
+                <Property Name="inspection_lot" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="NonNegative" sap:label="Inspection Lot" sap:quickinfo="Inspection Lot Number"/>
+                <Property Name="operation_number" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="Current Node No." sap:quickinfo="Current Node Number from Order Counter"/>
+                <Property Name="characteristic_number" Type="Edm.String" MaxLength="4" sap:display-format="NonNegative" sap:label="Insp. Characteristic" sap:quickinfo="Inspection Characteristic Number"/>
+                <Property Name="measured_value" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Valuation" sap:quickinfo="Inspection Result Valuation"/>
+                <Property Name="plant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
+                <Property Name="inspection_type" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:label="Inspection Type"/>
+                <Property Name="object_number" Type="Edm.String" MaxLength="22" sap:display-format="UpperCase" sap:label="Object number"/>
+                <Property Name="object_type" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Object Type"/>
+                <Property Name="status" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Usage Decision Made" sap:quickinfo="Usage Decision Was Made"/>
+                <Property Name="start_date" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Start of Inspection" sap:quickinfo="Start Date of Inspection in Local Time Zone"/>
+                <Property Name="end_date" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="End of Inspection" sap:quickinfo="End Date of Inspection in Local Time Zone"/>
+                <Property Name="quantity" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Insp. Lot Origin" sap:quickinfo="Inspection Lot Origin"/>
+                <Property Name="unit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:quickinfo="Base Unit of Measure for Inspection Lot Quantity" sap:semantics="unit-of-measure"/>
+                <Property Name="material_text" Type="Edm.String" MaxLength="40" sap:label="Object Short Text" sap:quickinfo="Short Text for Inspection Object"/>
+                <Property Name="usage_decision" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Usage Decision Code"/>
+                <NavigationProperty Name="Parameters" Relationship="ZQM_RESRECORDS_CDS.assoc_17D4401CCA15893D92DB491CAE8FDD2E" FromRole="ToRole_assoc_17D4401CCA15893D92DB491CAE8FDD2E" ToRole="FromRole_assoc_17D4401CCA15893D92DB491CAE8FDD2E" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ZQM_RESRECORDSParameters" sap:semantics="parameters" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="p_plant"/>
+                </Key>
+                <Property Name="p_plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:parameter="mandatory" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="Set" Relationship="ZQM_RESRECORDS_CDS.assoc_17D4401CCA15893D92DB491CAE8FDD2E" FromRole="FromRole_assoc_17D4401CCA15893D92DB491CAE8FDD2E" ToRole="ToRole_assoc_17D4401CCA15893D92DB491CAE8FDD2E"/>
+            </EntityType>
+            <Association Name="assoc_17D4401CCA15893D92DB491CAE8FDD2E" sap:content-version="1">
+                <End Type="ZQM_RESRECORDS_CDS.ZQM_RESRECORDSParameters" Multiplicity="1" Role="FromRole_assoc_17D4401CCA15893D92DB491CAE8FDD2E"/>
+                <End Type="ZQM_RESRECORDS_CDS.ZQM_RESRECORDSType" Multiplicity="*" Role="ToRole_assoc_17D4401CCA15893D92DB491CAE8FDD2E"/>
+            </Association>
+            <EntityContainer Name="ZQM_RESRECORDS_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="ZQM_RESRECORDSSet" EntityType="ZQM_RESRECORDS_CDS.ZQM_RESRECORDSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ZQM_RESRECORDS" EntityType="ZQM_RESRECORDS_CDS.ZQM_RESRECORDSParameters" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="assoc_17D4401CCA15893D92DB491CAE8FDD2E" Association="ZQM_RESRECORDS_CDS.assoc_17D4401CCA15893D92DB491CAE8FDD2E" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ZQM_RESRECORDS" Role="FromRole_assoc_17D4401CCA15893D92DB491CAE8FDD2E"/>
+                    <End EntitySet="ZQM_RESRECORDSSet" Role="ToRole_assoc_17D4401CCA15893D92DB491CAE8FDD2E"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotation
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.SchemaVersion" String="1.0.0"/>
+                <Annotations
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZQM_RESRECORDS_CDS.ZQM_RESRECORDS_CDS_Entities">
+                    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                </Annotations>
+                <Annotations
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZQM_RESRECORDS_CDS.ZQM_RESRECORDS_CDS_Entities/ZQM_RESRECORDS">
+                    <Annotation Term="Capabilities.FilterRestrictions">
+                        <Record>
+                            <PropertyValue Property="NonFilterableProperties">
+                                <Collection>
+                                    <PropertyPath>p_plant</PropertyPath>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.NavigationRestrictions">
+                        <Record>
+                            <PropertyValue Property="RestrictedProperties">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Parameters"/>
+                                        <PropertyValue Property="FilterRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Filterable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.SortRestrictions">
+                        <Record>
+                            <PropertyValue Property="NonSortableProperties">
+                                <Collection>
+                                    <PropertyPath>p_plant</PropertyPath>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <atom:link
+                    xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="./sap/ZQM_RESRECORDS_CDS/$metadata"/>
+                    <atom:link
+                        xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="./sap/ZQM_RESRECORDS_CDS/$metadata"/>
+                    </Schema>
+                </edmx:DataServices>
+            </edmx:Edmx>

@@ -21,6 +21,14 @@
 					"odataVersion": "2.0",
 					"localUri": "localService/metadata.xml"
 				}
+			},
+			"ZQM_RESRECORDS_CDS": {
+				"uri": "/sap/opu/odata/sap/ZQM_RESRECORDS_CDS/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/ZQM_RESRECORDS_CDS/metadata.xml"
+				}
 			}
 		}
 	},
@@ -76,19 +84,29 @@
 				"async": true
 			},
 			"routes": [{
-				"pattern": "",
-				"name": "View1",
-				"target": "View1"
-			}],
+					"pattern": "",
+					"name": "View1",
+					"target": "View1"
+				}, {
+					"pattern": "dashboard",
+					"name": "Dashboard1",
+					"target": "Dashboard1"
+				}
+
+			],
 			"targets": {
 				"View1": {
 					"viewId": "View1",
 					"viewName": "View1",
 					"transition": "fade"
+				},
+				"Dashboard1": {
+					"viewName": "Dashboard1",
+					"viewId": "Dashboard1",
+					"transition": "fade"
 				}
 			}
 		},
-		
 		"contentDensities": {
 			"compact": true,
 			"cozy": true
@@ -102,11 +120,9 @@
 			}
 		},
 		"resources": {
-			"css": [
-				{
-					"uri": "css/style.css"
-				}
-			]
+			"css": [{
+				"uri": "css/style.css"
+			}]
 		}
 	}
 }

@@ -17,7 +17,7 @@
     {
       "templateId": "servicecatalog.connectivityComponent",
       "templateVersion": "0.0.0",
-      "dateTimeStamp": "Wed, 02 Jul 2025 06:15:48 GMT"
+      "dateTimeStamp": "Thu, 03 Jul 2025 06:09:36 GMT"
     }
   ],
   "translation": {
@@ -47,7 +47,7 @@
     "blockPushLevel": "Error"
   },
   "mockpreview": {
-    "mockUri": "/sap/opu/odata/sap/ZPP_QLOGIN_V_CDS",
+    "mockUri": "/sap/opu/odata/sap/ZQM_RESRECORDS_CDS",
     "metadataFilePath": "",
     "loadJSONFiles": false,
     "loadCustomRequests": false,

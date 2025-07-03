@@ -2,11 +2,11 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/m/MessageToast",
 	"sap/m/MessageStrip"
-], function (Controller, MessageToast, MessageStrip) {
+], function(Controller, MessageToast, MessageStrip) {
 	"use strict";
 
 	return Controller.extend("QualityPortal.controller.View1", {
-		onLoginPress: function () {
+		onLoginPress: function() {
 			var oView = this.getView();
 			var sUser = oView.byId("username").getValue().trim();
 			var sPass = oView.byId("password").getValue().trim();
@@ -29,28 +29,32 @@ sap.ui.define([
 			var oModel = new sap.ui.model.odata.v2.ODataModel("/sap/opu/odata/sap/ZPP_QLOGIN_V_CDS/");
 			var sPath = "/ZPP_QLOGIN_V(p_bname='" + sUser + "',p_pass='" + encodeURIComponent(sPass) + "')/Set";
 
+			var that = this;
+
 			oModel.read(sPath, {
-				success: function (oData) {
+				success: function(oData) {
 					var result = oData.results && oData.results[0];
 					if (result && result.login_status === "Y") {
 						oMsgStrip.setVisible(true);
 						oMsgStrip.setText("Login successful!");
 						oMsgStrip.setType("Success");
-					//	oStatusText.setText("Welcome, " + result.bname);
+
+						var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+						oRouter.navTo("Dashboard1");
 					} else {
 						oMsgStrip.setVisible(true);
 						oMsgStrip.setText("Invalid username or password.");
 						oMsgStrip.setType("Error");
-					//	oStatusText.setText("Login failed.");
 					}
 				},
-				error: function () {
+				error: function() {
 					oMsgStrip.setVisible(true);
 					oMsgStrip.setText("Server error during login. Please try again.");
 					oMsgStrip.setType("Error");
 					oStatusText.setText("Login failed.");
 				}
 			});
+
 		}
 	});
 });
