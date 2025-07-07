@@ -29,6 +29,22 @@
 					"odataVersion": "2.0",
 					"localUri": "localService/ZQM_RESRECORDS_CDS/metadata.xml"
 				}
+			},
+			"ZQM_INSPECTIONLOT_CDS_CDS": {
+				"uri": "/sap/opu/odata/sap/ZQM_INSPECTIONLOT_CDS_CDS/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/ZQM_INSPECTIONLOT_CDS_CDS/metadata.xml"
+				}
+			},
+			"ZQM_USAGEDEF_CDS": {
+				"uri": "/sap/opu/odata/sap/ZQM_USAGEDEF_CDS/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/ZQM_USAGEDEF_CDS/metadata.xml"
+				}
 			}
 		}
 	},
@@ -84,27 +100,47 @@
 				"async": true
 			},
 			"routes": [{
-					"pattern": "",
-					"name": "View1",
-					"target": "View1"
-				}, {
-					"pattern": "dashboard",
-					"name": "Dashboard1",
-					"target": "Dashboard1"
-				}
-
-			],
+				"pattern": "",
+				"name": "View1",
+				"target": "View1"
+			}, {
+				"pattern": "dashboard",
+				"name": "Dashboard1",
+				"target": "Dashboard1"
+			}, {
+				"pattern": "dashboard2",
+				"name": "Dashboard2",
+				"target": "Dashboard2"
+			}, {
+				"pattern": "Dashboard3",
+				"name": "Dashboard3",
+				"target": "Dashboard3"
+			}],
 			"targets": {
 				"View1": {
 					"viewId": "View1",
 					"viewName": "View1",
-					"transition": "fade"
+					"transition": "slide"
 				},
 				"Dashboard1": {
 					"viewName": "Dashboard1",
 					"viewId": "Dashboard1",
-					"transition": "fade"
+					"transition": "slide"
+				},
+				"Dashboard2": {
+					"viewName": "Dashboard2",
+					"viewId": "Dashboard2",
+					"transition": "slide"
+				},
+				"Dashboard3": {
+					"viewName": "Dashboard3",
+					"viewType": "XML",
+					"viewId": "Dashboard3",
+					"controlAggregation": "pages",
+					"controlId": "app",
+					"transition": "slide"
 				}
+
 			}
 		},
 		"contentDensities": {

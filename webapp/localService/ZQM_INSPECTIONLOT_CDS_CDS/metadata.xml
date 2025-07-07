@@ -1,0 +1,136 @@
+<edmx:Edmx
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="./iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZQM_INSPECTIONLOT_CDS_CDS" xml:lang="en" sap:schema-version="1">
+            <EntityType Name="ZQM_INSPECTIONLOT_CDSType" sap:label="Quality Inspection Lot View" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="p_plant"/>
+                    <PropertyRef Name="inspection_lot"/>
+                </Key>
+                <Property Name="p_plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
+                <Property Name="inspection_lot" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="NonNegative" sap:label="Inspection Lot" sap:quickinfo="Inspection Lot Number"/>
+                <Property Name="plant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
+                <Property Name="material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="inspection_type" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:label="Inspection Type"/>
+                <Property Name="created_on" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Lot Created" sap:quickinfo="Date in Time Zone Where Lot Created"/>
+                <Property Name="start_date" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Start of Inspection" sap:quickinfo="Start Date of Inspection in Local Time Zone"/>
+                <Property Name="end_date" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="End of Inspection" sap:quickinfo="End Date of Inspection in Local Time Zone"/>
+                <Property Name="quantity" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Insp. Lot Origin" sap:quickinfo="Inspection Lot Origin"/>
+                <Property Name="unit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:quickinfo="Base Unit of Measure for Inspection Lot Quantity" sap:semantics="unit-of-measure"/>
+                <Property Name="material_text" Type="Edm.String" MaxLength="40" sap:label="Object Short Text" sap:quickinfo="Short Text for Inspection Object"/>
+                <Property Name="characteristic_type" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Usage Decision Type" sap:quickinfo="Inspection Lot, Partial Lot, Single Unit, Interval"/>
+                <Property Name="usage_decision" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Usage Decision Code"/>
+                <NavigationProperty Name="Parameters" Relationship="ZQM_INSPECTIONLOT_CDS_CDS.assoc_F29A972B9A66888AF6F3F496B2D0AEF0" FromRole="ToRole_assoc_F29A972B9A66888AF6F3F496B2D0AEF0" ToRole="FromRole_assoc_F29A972B9A66888AF6F3F496B2D0AEF0" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="ZQM_INSPECTIONLOT_CDSParameters" sap:semantics="parameters" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="p_plant"/>
+                </Key>
+                <Property Name="p_plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:parameter="mandatory" sap:label="Plant" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="Set" Relationship="ZQM_INSPECTIONLOT_CDS_CDS.assoc_F29A972B9A66888AF6F3F496B2D0AEF0" FromRole="FromRole_assoc_F29A972B9A66888AF6F3F496B2D0AEF0" ToRole="ToRole_assoc_F29A972B9A66888AF6F3F496B2D0AEF0"/>
+            </EntityType>
+            <Association Name="assoc_F29A972B9A66888AF6F3F496B2D0AEF0" sap:content-version="1">
+                <End Type="ZQM_INSPECTIONLOT_CDS_CDS.ZQM_INSPECTIONLOT_CDSParameters" Multiplicity="1" Role="FromRole_assoc_F29A972B9A66888AF6F3F496B2D0AEF0"/>
+                <End Type="ZQM_INSPECTIONLOT_CDS_CDS.ZQM_INSPECTIONLOT_CDSType" Multiplicity="*" Role="ToRole_assoc_F29A972B9A66888AF6F3F496B2D0AEF0"/>
+            </Association>
+            <EntityContainer Name="ZQM_INSPECTIONLOT_CDS_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="ZQM_INSPECTIONLOT_CDSSet" EntityType="ZQM_INSPECTIONLOT_CDS_CDS.ZQM_INSPECTIONLOT_CDSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="ZQM_INSPECTIONLOT_CDS" EntityType="ZQM_INSPECTIONLOT_CDS_CDS.ZQM_INSPECTIONLOT_CDSParameters" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="assoc_F29A972B9A66888AF6F3F496B2D0AEF0" Association="ZQM_INSPECTIONLOT_CDS_CDS.assoc_F29A972B9A66888AF6F3F496B2D0AEF0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="ZQM_INSPECTIONLOT_CDS" Role="FromRole_assoc_F29A972B9A66888AF6F3F496B2D0AEF0"/>
+                    <End EntitySet="ZQM_INSPECTIONLOT_CDSSet" Role="ToRole_assoc_F29A972B9A66888AF6F3F496B2D0AEF0"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotation
+                xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.SchemaVersion" String="1.0.0"/>
+                <Annotations
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZQM_INSPECTIONLOT_CDS_CDS.ZQM_INSPECTIONLOT_CDS_CDS_Entities">
+                    <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                </Annotations>
+                <Annotations
+                    xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZQM_INSPECTIONLOT_CDS_CDS.ZQM_INSPECTIONLOT_CDS_CDS_Entities/ZQM_INSPECTIONLOT_CDS">
+                    <Annotation Term="Capabilities.FilterRestrictions">
+                        <Record>
+                            <PropertyValue Property="NonFilterableProperties">
+                                <Collection>
+                                    <PropertyPath>p_plant</PropertyPath>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.NavigationRestrictions">
+                        <Record>
+                            <PropertyValue Property="RestrictedProperties">
+                                <Collection>
+                                    <Record>
+                                        <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Parameters"/>
+                                        <PropertyValue Property="FilterRestrictions">
+                                            <Record>
+                                                <PropertyValue Property="Filterable" Bool="false"/>
+                                            </Record>
+                                        </PropertyValue>
+                                    </Record>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                    <Annotation Term="Capabilities.SortRestrictions">
+                        <Record>
+                            <PropertyValue Property="NonSortableProperties">
+                                <Collection>
+                                    <PropertyPath>p_plant</PropertyPath>
+                                </Collection>
+                            </PropertyValue>
+                        </Record>
+                    </Annotation>
+                </Annotations>
+                <atom:link
+                    xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="./sap/ZQM_INSPECTIONLOT_CDS_CDS/$metadata"/>
+                    <atom:link
+                        xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="./sap/ZQM_INSPECTIONLOT_CDS_CDS/$metadata"/>
+                    </Schema>
+                </edmx:DataServices>
+            </edmx:Edmx>

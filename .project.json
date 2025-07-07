@@ -17,7 +17,7 @@
     {
       "templateId": "servicecatalog.connectivityComponent",
       "templateVersion": "0.0.0",
-      "dateTimeStamp": "Thu, 03 Jul 2025 06:09:36 GMT"
+      "dateTimeStamp": "Mon, 07 Jul 2025 03:58:09 GMT"
     }
   ],
   "translation": {
@@ -47,7 +47,7 @@
     "blockPushLevel": "Error"
   },
   "mockpreview": {
-    "mockUri": "/sap/opu/odata/sap/ZQM_RESRECORDS_CDS",
+    "mockUri": "/sap/opu/odata/sap/ZQM_USAGEDEF_CDS",
     "metadataFilePath": "",
     "loadJSONFiles": false,
     "loadCustomRequests": false,

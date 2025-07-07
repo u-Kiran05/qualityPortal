@@ -23,6 +23,9 @@ sap.ui.define([
 		onLogout: function() {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("View1");
 		},
+		onGoToDashboard2: function() {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("Dashboard2");
+		},
 
 		onApplyFilter: function() {
 			var sPlant = this.byId("plantInput").getValue();

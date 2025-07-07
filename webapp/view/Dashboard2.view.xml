@@ -1,29 +1,29 @@
-<mvc:View controllerName="QualityPortal.controller.Dashboard1" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:layout="sap.ui.layout"
-	xmlns:viz="sap.viz.ui5.controls" xmlns:core="sap.ui.core">
+<mvc:View controllerName="QualityPortal.controller.Dashboard2" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:layout="sap.ui.layout"
+	xmlns:core="sap.ui.core" xmlns:viz="sap.viz.ui5.controls">
 	<Page>
 		<customHeader>
 			<Bar>
 				<contentLeft>
-					<Button icon="sap-icon://log" text="Logout" press="onLogout"/>
+					<Button icon="sap-icon://nav-back" text="Back" press="onBack"/>
 				</contentLeft>
 				<contentMiddle>
-					<Title text="Result Recording Overview - Quality Portal"/>
+					<Title text="Inspection Dashboard - Quality Portal"/>
 				</contentMiddle>
 				<contentRight>
-					<Button text="Next" icon="sap-icon://navigation-right-arrow" press="onGoToDashboard2"/>
+					<Button text="Next" icon="sap-icon://navigation-right-arrow" press="onNavigateToDashboard3"/>
 				</contentRight>
 			</Bar>
 		</customHeader>
 		<content>
 			<!-- Filter Bar -->
 			<HBox class="sapUiSmallMargin" alignItems="Center" justifyContent="SpaceBetween">
-				<Input id="plantInput" width="200px" placeholder="Enter Plant ID" liveChange="onFilterChange"/>
-				<Select id="yearSelect" width="150px" change="onFilterChange">
+				<Input id="plantInput" width="200px" placeholder="Enter Plant ID"/>
+				<Select id="yearSelect" width="150px">
 					<core:Item key="2023" text="2023"/>
 					<core:Item key="2024" text="2024"/>
 					<core:Item key="2025" text="2025"/>
 				</Select>
-				<Select id="monthSelect" width="150px" change="onFilterChange">
+				<Select id="monthSelect" width="150px">
 					<core:Item key="" text="All Months"/>
 					<core:Item key="01" text="January"/>
 					<core:Item key="02" text="February"/>
@@ -41,57 +41,71 @@
 				<Button text="Apply Filter" press="onApplyFilter"/>
 			</HBox>
 			<!-- KPI Cards -->
-			<layout:Grid defaultSpan="L4 M6 S12" class="sapUiMediumMarginTop">
+			<layout:Grid defaultSpan="L3 M6 S12" class="sapUiMediumMarginTop">
 				<Panel headerText="Total Lots" class="cardPanel">
 					<VBox class="sapUiSmallMargin">
-						<ObjectNumber number="{kpi>/totalLots}" unit="Lots"/>
+						<ObjectNumber id="kpiTotal" unit="Lots"/>
 					</VBox>
 				</Panel>
 				<Panel headerText="Approved" class="cardPanel">
 					<VBox class="sapUiSmallMargin">
-						<ObjectNumber number="{kpi>/approved}" unit="Approved" state="Success"/>
+						<ObjectNumber id="kpiApproved" unit="Approved" state="Success"/>
 					</VBox>
 				</Panel>
 				<Panel headerText="Rejected" class="cardPanel">
 					<VBox class="sapUiSmallMargin">
-						<ObjectNumber number="{kpi>/rejected}" unit="Rejected" state="Error"/>
+						<ObjectNumber id="kpiRejected" unit="Rejected" state="Error"/>
+					</VBox>
+				</Panel>
+				<Panel headerText="In Progress" class="cardPanel">
+					<VBox class="sapUiSmallMargin">
+						<ObjectNumber id="kpiInProgress" unit="Lots" state="Warning"/>
 					</VBox>
 				</Panel>
 			</layout:Grid>
 			<!-- Charts -->
 			<layout:Grid id="chartGrid" defaultSpan="L4 M4 S12" class="sapUiMediumMarginTop">
 				<Panel class="cardPanel">
-					<viz:VizFrame id="barChart" width="100%" height="300px"/>
+					<viz:VizFrame id="chart1" width="100%" height="300px"/>
 				</Panel>
 				<Panel class="cardPanel">
-					<viz:VizFrame id="donutChart" width="100%" height="300px"/>
+					<viz:VizFrame id="chart2" width="100%" height="300px"/>
 				</Panel>
 				<Panel class="cardPanel">
-					<viz:VizFrame id="lineChart" width="100%" height="300px"/>
+					<viz:VizFrame id="chart3" width="100%" height="300px"/>
+				</Panel>
+				<Panel class="cardPanel">
+					<viz:VizFrame id="chart4" width="100%" height="300px"/>
+				</Panel>
+				<Panel class="cardPanel">
+					<viz:VizFrame id="chart5" width="100%" height="300px"/>
+				</Panel>
+				<Panel class="cardPanel">
+					<viz:VizFrame id="chart6" width="100%" height="300px"/>
 				</Panel>
 			</layout:Grid>
 			<!-- Table -->
-			<Panel id="tablePanel" headerText="Inspection Records Table" class="cardTable">
-				<Table items="{kpi>/results}" growing="true" growingScrollToLoad="true">
+			<Panel id="tablePanel" headerText="Inspection Lots Table" class="cardTable sapUiMediumMarginTop">
+				<Table id="lotTable" growing="true" growingScrollToLoad="true" items="{lot>/results}" noDataText="No inspection lots found">
 					<columns>
 						<Column><Text text="Lot No"/></Column>
-						<Column><Text text="Type"/></Column>
 						<Column><Text text="Material"/></Column>
 						<Column><Text text="Qty"/></Column>
 						<Column><Text text="Unit"/></Column>
+						<Column><Text text="Type"/></Column>
 						<Column><Text text="Decision"/></Column>
 						<Column><Text text="Start Date"/></Column>
 					</columns>
 					<items>
 						<ColumnListItem>
 							<cells>
-								<Text text="{kpi>inspection_lot}"/>
-								<Text text="{kpi>inspection_type}"/>
-								<Text text="{kpi>material_text}"/>
-								<Text text="{kpi>quantity}"/>
-								<Text text="{kpi>unit}"/>
-								<Text text="{kpi>usage_decision}"/>
-								<Text text="{path: 'kpi>start_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"/>
+								<Text text="{lot>inspection_lot}"/>
+								<Text text="{lot>material_text}"/>
+								<Text text="{lot>quantity}"/>
+								<Text text="{lot>unit}"/>
+								<Text text="{lot>inspection_type}"/>
+								<Text text="{lot>usage_decision}"/>
+								<Text text="{path: 'lot>start_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"/>
 							</cells>
 						</ColumnListItem>
 					</items>
