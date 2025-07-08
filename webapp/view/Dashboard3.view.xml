@@ -10,7 +10,7 @@
 					<Title text="Usage Decision Dashboard - Quality Portal"/>
 				</contentMiddle>
 				<contentRight>
-					<Button icon="sap-icon://log" text="Logout" press="onLogout"/>
+					<Button text="Next" icon="sap-icon://navigation-right-arrow" press="onNavigateToDashboard1"/>
 				</contentRight>
 			</Bar>
 		</customHeader>

@@ -40,7 +40,7 @@ sap.ui.define([
 						oMsgStrip.setType("Success");
 
 						var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-						oRouter.navTo("Dashboard1");
+						oRouter.navTo("Dashboard2");
 					} else {
 						oMsgStrip.setVisible(true);
 						oMsgStrip.setText("Invalid username or password.");

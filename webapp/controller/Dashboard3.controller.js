@@ -22,7 +22,9 @@ sap.ui.define([
 		onBack: function() {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("Dashboard2");
 		},
-
+		onNavigateToDashboard1: function() {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("Dashboard1");
+		},
 		onLogout: function() {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("View1");
 		},

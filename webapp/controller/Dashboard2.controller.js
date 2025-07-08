@@ -14,7 +14,9 @@ sap.ui.define([
 			});
 			this.getView().setModel(this.lotModel, "lot");
 		},
-
+		onLogout: function() {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("View1");
+		},
 		onNavigateToDashboard3: function() {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("Dashboard3");
 		},

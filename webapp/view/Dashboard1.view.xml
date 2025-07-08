@@ -4,13 +4,13 @@
 		<customHeader>
 			<Bar>
 				<contentLeft>
-					<Button icon="sap-icon://log" text="Logout" press="onLogout"/>
+					<Button icon="sap-icon://nav-back" text="Back" press="onNavigateToDashboard3"/>
 				</contentLeft>
 				<contentMiddle>
 					<Title text="Result Recording Overview - Quality Portal"/>
 				</contentMiddle>
 				<contentRight>
-					<Button text="Next" icon="sap-icon://navigation-right-arrow" press="onGoToDashboard2"/>
+						<Button icon="sap-icon://log" text="Logout" press="onLogout"/>
 				</contentRight>
 			</Bar>
 		</customHeader>
