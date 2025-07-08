@@ -24,25 +24,63 @@ sap.ui.define([
 		},
 
 		onApplyFilter: function() {
-			var sPlant = this.byId("plantInput").getValue();
+			var sPlant = this.byId("plantSelect").getSelectedKey();
+			var sYear = this.byId("yearSelect").getSelectedKey();
+			var sMonth = this.byId("monthSelect").getSelectedKey();
+
 			if (!sPlant) {
-				MessageToast.show("Please enter Plant ID");
+				MessageToast.show("Please select a Plant");
 				return;
 			}
 
-			var sPath = "/ZQM_INSPECTIONLOT_CDS(p_plant='" + sPlant + "')/Set";
 			var oModel = new sap.ui.model.odata.v2.ODataModel("/sap/opu/odata/sap/ZQM_INSPECTIONLOT_CDS_CDS/");
+			var sPath = "/ZQM_INSPECTIONLOT_CDS(p_plant='" + sPlant + "')/Set";
 			var that = this;
 
 			oModel.read(sPath, {
 				success: function(oData) {
 					var results = oData.results || [];
+
+					if (sYear) {
+						results = results.filter(function(item) {
+							var rawDate = item.start_date;
+							var date = null;
+
+							if (rawDate instanceof Date) {
+								date = rawDate;
+							} else if (typeof rawDate === "string" || typeof rawDate === "number") {
+								date = new Date(rawDate);
+							}
+
+							if (!date || isNaN(date.getTime())) return false;
+
+							var matchYear = date.getFullYear().toString() === sYear;
+							var matchMonth = !sMonth || (String(date.getMonth() + 1).padStart(2, '0') === sMonth);
+
+							return matchYear && matchMonth;
+						});
+					}
+
+				//	console.log("Filtered for", sYear, sMonth, "Results:", results.length);
+
 					that._updateDashboard(results);
+
+					if (that.byId("chartGrid")) {
+						that.byId("chartGrid").setVisible(true);
+					}
+					if (that.byId("tablePanel")) {
+						that.byId("tablePanel").setVisible(true);
+					}
 				},
 				error: function() {
 					MessageToast.show("Error retrieving inspection lots.");
 				}
 			});
+		},
+
+		_parseSapDate: function(sapDateString) {
+			var match = /\/Date\((\d+)\)\//.exec(sapDateString);
+			return match ? new Date(parseInt(match[1])) : null;
 		},
 
 		_getInspectionTypeText: function(code) {

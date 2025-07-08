@@ -28,7 +28,8 @@ sap.ui.define([
 		},
 
 		onApplyFilter: function() {
-			var sPlant = this.byId("plantInput").getValue();
+			var sPlant = this.byId("plantSelect").getSelectedKey();
+
 			var sYear = this.byId("yearSelect").getSelectedKey();
 			var sMonth = this.byId("monthSelect").getSelectedKey();
 

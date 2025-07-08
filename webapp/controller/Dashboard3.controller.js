@@ -28,7 +28,7 @@ sap.ui.define([
 		},
 
 		onApplyFilter: function() {
-			var sPlant = this.byId("plantInputUD").getValue();
+			var sPlant = this.byId("plantSelect").getSelectedKey();
 			if (!sPlant) {
 				MessageToast.show("Please enter Plant ID");
 				return;
@@ -41,7 +41,7 @@ sap.ui.define([
 			oModel.read(sPath, {
 				success: function(oData) {
 					var results = oData.results || [];
-					console.log("✅ Usage Decision Results:", results);
+					//console.log("usage Decision Results:", results);
 					that._updateDashboard(results);
 				},
 				error: function() {
