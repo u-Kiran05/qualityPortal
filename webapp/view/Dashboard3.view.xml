@@ -44,42 +44,42 @@
 			<layout:Grid defaultSpan="L4 M6 S12" class="sapUiMediumMarginTop">
 				<Panel headerText="Total Lots" class="cardPanel">
 					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiTotalUD" unit="Lots"/>
+						<ObjectNumber id="kpiTotalUD" number="{ud>/total}" unit="Lots"/>
 					</VBox>
 				</Panel>
-				<Panel headerText="Approved" class="cardPanel">
+				<Panel headerText="Accepted" class="cardPanel">
 					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiApprovedUD" unit="Approved" state="Success"/>
+						<ObjectNumber id="kpiApprovedUD" number="{ud>/approved}" unit="Accepted" state="Success"/>
 					</VBox>
 				</Panel>
 				<Panel headerText="Rejected" class="cardPanel">
 					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiRejectedUD" unit="Rejected" state="Error"/>
+						<ObjectNumber id="kpiRejectedUD" number="{ud>/rejected}" unit="Rejected" state="Error"/>
 					</VBox>
 				</Panel>
 			</layout:Grid>
 			<!-- Charts -->
 			<layout:Grid defaultSpan="L4 M4 S12" class="sapUiMediumMarginTop">
 				<Panel class="cardPanel">
-					<viz:VizFrame id="udChart1" width="100%" height="300px"/>
+					<viz:VizFrame id="udChart1" vizType="stacked_column" width="100%" height="300px"/>
 				</Panel>
 				<Panel class="cardPanel">
-					<viz:VizFrame id="udChart2" width="100%" height="300px"/>
+					<viz:VizFrame id="udChart2" vizType="stacked_column" width="100%" height="300px"/>
 				</Panel>
 				<Panel class="cardPanel">
-					<viz:VizFrame id="udChart3" width="100%" height="300px"/>
+					<viz:VizFrame id="udChart3" vizType="stacked_column" width="100%" height="300px"/>
 				</Panel>
 			</layout:Grid>
 			<!-- Table -->
 			<Panel headerText="Usage Decision Records Table" class="cardTable sapUiMediumMarginTop">
 				<Table id="udTable" items="{ud>/results}" growing="true" growingScrollToLoad="true" noDataText="No usage decision records found">
 					<columns>
-						<Column><Text text="Inspection Lot"/></Column>
-						<Column><Text text="Material"/></Column>
-						<Column><Text text="Inspection Type"/></Column>
-						<Column><Text text="Usage Decision"/></Column>
-						<Column><Text text="Object Type"/></Column>
-						<Column><Text text="Status"/></Column>
+						<Column width="150px"><Text text="Inspection Lot"/></Column>
+						<Column width="100px"><Text text="Material"/></Column>
+						<Column width="150px"><Text text="Inspection Type"/></Column>
+						<Column width="150px"><Text text="Usage Decision"/></Column>
+						<Column width="100px"><Text text="Object Type"/></Column>
+						<Column width="100px"><Text text="Status"/></Column>
 					</columns>
 					<items>
 						<ColumnListItem>
@@ -87,7 +87,7 @@
 								<Text text="{ud>inspection_lot}"/>
 								<Text text="{ud>material}"/>
 								<Text text="{ud>inspection_type}"/>
-								<Text text="{ud>measured_value}"/>
+								<Text text="{ud>usage_decision_text}"/>
 								<Text text="{ud>object_type}"/>
 								<Text text="{ud>status}"/>
 							</cells>

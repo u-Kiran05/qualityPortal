@@ -11,7 +11,10 @@ sap.ui.define([
 	return Controller.extend("QualityPortal.controller.Dashboard3", {
 		onInit: function() {
 			this.udModel = new JSONModel({
-				results: []
+				results: [],
+				total: 0,
+				approved: 0,
+				rejected: 0
 			});
 			this.getView().setModel(this.udModel, "ud");
 		},
@@ -19,32 +22,27 @@ sap.ui.define([
 		onBack: function() {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("Dashboard2");
 		},
+
 		onLogout: function() {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("View1");
 		},
+
 		onApplyFilter: function() {
 			var sPlant = this.byId("plantInputUD").getValue();
-			var sYear = this.byId("yearSelectUD").getSelectedKey();
-			var sMonth = this.byId("monthSelectUD").getSelectedKey();
-
 			if (!sPlant) {
 				MessageToast.show("Please enter Plant ID");
 				return;
 			}
 
-			var sPath = "/ZQM_USAGEDEF?$filter=plant eq '" + sPlant + "'";
-			var oModel = new ODataModel("/sap/opu/odata/sap/ZQM_USAGEDEF_CDS/");
+			var sPath = "/ZQM_USAGEDEF_V2(p_plant='" + sPlant + "')/Set";
+			var oModel = new ODataModel("/sap/opu/odata/sap/ZQM_USAGEDEF_V2_CDS/");
 			var that = this;
 
 			oModel.read(sPath, {
 				success: function(oData) {
 					var results = oData.results || [];
-					console.log("Raw OData results:", results);
-
-					// TEMPORARILY skip filtering for testing
-					var filtered = results;
-
-					that._updateDashboard(filtered);
+					console.log("✅ Usage Decision Results:", results);
+					that._updateDashboard(results);
 				},
 				error: function() {
 					MessageToast.show("Error retrieving usage decision data.");
@@ -53,30 +51,28 @@ sap.ui.define([
 		},
 
 		_updateDashboard: function(results) {
-			var approved = results.filter(function(r) {
-				return r.measured_value === "A";
-			}).length;
-
-			var rejected = results.filter(function(r) {
-				return r.measured_value === "R";
-			}).length;
-
 			var total = results.length;
+			var approved = results.filter(function(r) {
+				return r.usage_decision_text === "Accepted";
+			}).length;
+			var rejected = results.filter(function(r) {
+				return r.usage_decision_text === "Rejected";
+			}).length;
 
 			this.udModel.setData({
+				results: results,
 				total: total,
 				approved: approved,
-				rejected: rejected,
-				results: results
+				rejected: rejected
 			});
 
 			this.byId("kpiTotalUD").setNumber(total);
 			this.byId("kpiApprovedUD").setNumber(approved);
 			this.byId("kpiRejectedUD").setNumber(rejected);
 
-			this._buildChart(this.byId("udChart1"), results, "inspection_type", "Usage Decision by Type");
-			this._buildChart(this.byId("udChart2"), results, "material", "Usage by Material");
-			this._buildChart(this.byId("udChart3"), results, "object_type", "Usage by Object Type");
+			this._buildChart(this.byId("udChart1"), results, "inspection_type", "Usage Decision by Inspection Type");
+			this._buildChart(this.byId("udChart2"), results, "material", "Usage Decision by Material");
+			this._buildChart(this.byId("udChart3"), results, "status", "Usage Decision by Status");
 		},
 
 		_buildChart: function(oViz, data, groupField, title) {
@@ -91,18 +87,18 @@ sap.ui.define([
 				var key = item[groupField] || "Unknown";
 				if (!map[key]) {
 					map[key] = {
-						Approved: 0,
+						Accepted: 0,
 						Rejected: 0
 					};
 				}
-				if (item.measured_value === "A") map[key].Approved++;
-				else if (item.measured_value === "R") map[key].Rejected++;
+				if (item.usage_decision_text === "Accepted") map[key].Accepted++;
+				else if (item.usage_decision_text === "Rejected") map[key].Rejected++;
 			});
 
 			var chartData = Object.keys(map).map(function(key) {
 				return {
 					label: key,
-					Approved: map[key].Approved,
+					Accepted: map[key].Accepted,
 					Rejected: map[key].Rejected
 				};
 			});
@@ -113,8 +109,8 @@ sap.ui.define([
 					value: "{label}"
 				}],
 				measures: [{
-					name: "Approved",
-					value: "{Approved}"
+					name: "Accepted",
+					value: "{Accepted}"
 				}, {
 					name: "Rejected",
 					value: "{Rejected}"
@@ -134,7 +130,7 @@ sap.ui.define([
 			oViz.addFeed(new FeedItem({
 				uid: "valueAxis",
 				type: "Measure",
-				values: ["Approved", "Rejected"]
+				values: ["Accepted", "Rejected"]
 			}));
 			oViz.addFeed(new FeedItem({
 				uid: "categoryAxis",
