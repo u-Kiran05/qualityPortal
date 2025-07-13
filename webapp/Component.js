@@ -6,7 +6,6 @@ sap.ui.define([
 	"use strict";
 
 	return UIComponent.extend("QualityPortal.Component", {
-
 		metadata: {
 			manifest: "json"
 		},
