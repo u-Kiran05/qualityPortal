@@ -50,25 +50,17 @@
 			</HBox>
 			<!-- KPI Cards -->
 			<layout:Grid defaultSpan="L3 M6 S12" class="sapUiMediumMarginTop">
-				<Panel headerText="Total Lots" class="cardPanel">
-					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiTotal" unit="Lots"/>
-					</VBox>
+				<Panel headerText="Total Inspection Lots" class="cardPanel">
+					<ObjectNumber id="kpiTotal" unit="Lots"/>
 				</Panel>
-				<Panel headerText="Approved" class="cardPanel">
-					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiApproved" unit="Approved" state="Success"/>
-					</VBox>
+				<Panel headerText="Total Inspection Types" class="cardPanel">
+					<ObjectNumber id="kpiApproved" unit="Types" state="Success"/>
 				</Panel>
-				<Panel headerText="Rejected" class="cardPanel">
-					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiRejected" unit="Rejected" state="Error"/>
-					</VBox>
+				<Panel headerText="Total Materials" class="cardPanel">
+					<ObjectNumber id="kpiRejected" unit="Materials" state="Information"/>
 				</Panel>
-				<Panel headerText="In Progress" class="cardPanel">
-					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiInProgress" unit="Lots" state="Warning"/>
-					</VBox>
+				<Panel headerText="Total Units" class="cardPanel">
+					<ObjectNumber id="kpiInProgress" unit="Units" state="None"/>
 				</Panel>
 			</layout:Grid>
 			<!-- Charts -->
@@ -82,15 +74,7 @@
 				<Panel class="cardPanel">
 					<viz:VizFrame id="chart3" width="100%" height="300px"/>
 				</Panel>
-				<Panel class="cardPanel">
-					<viz:VizFrame id="chart4" width="100%" height="300px"/>
-				</Panel>
-				<Panel class="cardPanel">
-					<viz:VizFrame id="chart5" width="100%" height="300px"/>
-				</Panel>
-				<Panel class="cardPanel">
-					<viz:VizFrame id="chart6" width="100%" height="300px"/>
-				</Panel>
+			
 			</layout:Grid>
 			<!-- Table -->
 			<Panel id="tablePanel" headerText="Inspection Lots Table" class="cardTable sapUiMediumMarginTop">
@@ -101,7 +85,7 @@
 						<Column><Text text="Qty"/></Column>
 						<Column><Text text="Unit"/></Column>
 						<Column><Text text="Type"/></Column>
-						<Column><Text text="Decision"/></Column>
+					
 						<Column><Text text="Start Date"/></Column>
 					</columns>
 					<items>
@@ -112,7 +96,7 @@
 								<Text text="{lot>quantity}"/>
 								<Text text="{lot>unit}"/>
 								<Text text="{lot>inspection_type}"/>
-								<Text text="{lot>usage_decision}"/>
+					
 								<Text text="{path: 'lot>start_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy-MM-dd' }}"/>
 							</cells>
 						</ColumnListItem>

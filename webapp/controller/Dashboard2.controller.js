@@ -14,9 +14,11 @@ sap.ui.define([
 			});
 			this.getView().setModel(this.lotModel, "lot");
 		},
+
 		onLogout: function() {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("View1");
 		},
+
 		onNavigateToDashboard3: function() {
 			sap.ui.core.UIComponent.getRouterFor(this).navTo("Dashboard3");
 		},
@@ -42,7 +44,6 @@ sap.ui.define([
 			oModel.read(sPath, {
 				success: function(oData) {
 					var results = oData.results || [];
-
 					if (sYear) {
 						results = results.filter(function(item) {
 							var rawDate = item.start_date;
@@ -57,16 +58,12 @@ sap.ui.define([
 							if (!date || isNaN(date.getTime())) return false;
 
 							var matchYear = date.getFullYear().toString() === sYear;
-							var matchMonth = !sMonth || (String(date.getMonth() + 1).padStart(2, '0') === sMonth);
+							var matchMonth = !sMonth || (("0" + (date.getMonth() + 1)).slice(-2) === sMonth);
 
 							return matchYear && matchMonth;
 						});
 					}
-
-				//	console.log("Filtered for", sYear, sMonth, "Results:", results.length);
-
 					that._updateDashboard(results);
-
 					if (that.byId("chartGrid")) {
 						that.byId("chartGrid").setVisible(true);
 					}
@@ -78,11 +75,6 @@ sap.ui.define([
 					MessageToast.show("Error retrieving inspection lots.");
 				}
 			});
-		},
-
-		_parseSapDate: function(sapDateString) {
-			var match = /\/Date\((\d+)\)\//.exec(sapDateString);
-			return match ? new Date(parseInt(match[1])) : null;
 		},
 
 		_getInspectionTypeText: function(code) {
@@ -113,63 +105,57 @@ sap.ui.define([
 				"WD": "Washer Disk",
 				"BL": "Bolt"
 			};
-			return map[code] || code || "Material " + code;
+			return map[code] || code || ("Material " + code);
 		},
+
 		_updateDashboard: function(results) {
-			var approved = 0,
-				rejected = 0;
-			for (var i = 0; i < results.length; i++) {
+			var inspectionTypes = {};
+			var materials = {};
+			var units = {};
+			var i;
+
+			for (i = 0; i < results.length; i++) {
 				var r = results[i];
 				r.inspection_type_text = this._getInspectionTypeText(r.inspection_type);
 				r.unit_text = this._getUnitText(r.unit);
 				r.material_text = this._getMaterialText(r.material_text);
 
-				if (r.usage_decision === "A") {
-					approved++;
-				} else if (r.usage_decision === "R") {
-					rejected++;
-				}
+				inspectionTypes[r.inspection_type_text] = true;
+				materials[r.material_text] = true;
+				units[r.unit_text] = true;
 			}
-			var total = results.length;
-			var inProgress = total - approved - rejected;
 
 			this.lotModel.setData({
-				total: total,
-				approved: approved,
-				rejected: rejected,
-				inProgress: inProgress,
 				results: results
 			});
 
-			this.byId("kpiTotal").setNumber(total);
-			this.byId("kpiApproved").setNumber(approved);
-			this.byId("kpiRejected").setNumber(rejected);
-			this.byId("kpiInProgress").setNumber(inProgress);
+			this.byId("kpiTotal").setNumber(results.length);
+			this.byId("kpiApproved").setNumber(Object.keys(inspectionTypes).length);
+			this.byId("kpiRejected").setNumber(Object.keys(materials).length);
+			this.byId("kpiInProgress").setNumber(Object.keys(units).length);
 
-			this._buildChart(this.byId("chart1"), results, "inspection_type_text", "Usage Decision by Type", "column");
-			this._buildDonut(this.byId("chart2"), results, "material_text", "Lots by Material");
-			this._buildLine(this.byId("chart3"), results, "start_date", "Monthly Inspection Trend");
-			this._buildChart(this.byId("chart4"), results, "unit_text", "Lots by Unit", "bar");
-			this._buildChart(this.byId("chart5"), results, "inspection_type_text", "Inspection Type Distribution", "stacked_bar");
-			this._buildChart(this.byId("chart6"), results, "usage_decision", "Decision Status Count", "column");
+			this._buildSimpleChart(this.byId("chart1"), results, "inspection_type_text", "Lots per Inspection Type", "column");
+			this._buildDonut(this.byId("chart2"), results, "material_text", "Lots per Material");
+			this._buildLine(this.byId("chart3"), results, "start_date", "Monthly Lot Count");
+
+			// Hide extra charts
+			var extraCharts = ["chart4", "chart5", "chart6"];
+			for (i = 0; i < extraCharts.length; i++) {
+				var c = this.byId(extraCharts[i]);
+				if (c) {
+					c.setVisible(false);
+				}
+			}
 		},
 
-		_buildChart: function(oViz, data, groupField, title, chartType) {
-			var map = {};
-			for (var i = 0; i < data.length; i++) {
+		_buildSimpleChart: function(oViz, data, groupField, title, chartType) {
+			var map = {}, i;
+			for (i = 0; i < data.length; i++) {
 				var key = data[i][groupField] || "Unknown";
 				if (!map[key]) {
-					map[key] = {
-						label: key,
-						Approved: 0,
-						Rejected: 0
-					};
+					map[key] = { Category: key, Count: 0 };
 				}
-				if (data[i].usage_decision === "A") {
-					map[key].Approved++;
-				} else if (data[i].usage_decision === "R") {
-					map[key].Rejected++;
-				}
+				map[key].Count++;
 			}
 			var chartData = [];
 			for (var k in map) {
@@ -178,95 +164,48 @@ sap.ui.define([
 
 			oViz.setVizType(chartType);
 			oViz.setDataset(new FlattenedDataset({
-				dimensions: [{
-					name: "Category",
-					value: "{label}"
-				}],
-				measures: [{
-					name: "Approved",
-					value: "{Approved}"
-				}, {
-					name: "Rejected",
-					value: "{Rejected}"
-				}],
-				data: {
-					path: "/"
-				}
+				dimensions: [{ name: "Category", value: "{Category}" }],
+				measures: [{ name: "Count", value: "{Count}" }],
+				data: { path: "/" }
 			}));
 			oViz.setModel(new JSONModel(chartData));
 			oViz.setVizProperties({
-				title: {
-					text: title,
-					visible: true
-				}
+				title: { text: title, visible: true }
 			});
 			oViz.removeAllFeeds();
-			oViz.addFeed(new FeedItem({
-				uid: "valueAxis",
-				type: "Measure",
-				values: ["Approved", "Rejected"]
-			}));
-			oViz.addFeed(new FeedItem({
-				uid: "categoryAxis",
-				type: "Dimension",
-				values: ["Category"]
-			}));
+			oViz.addFeed(new FeedItem({ uid: "valueAxis", type: "Measure", values: ["Count"] }));
+			oViz.addFeed(new FeedItem({ uid: "categoryAxis", type: "Dimension", values: ["Category"] }));
 		},
 
 		_buildDonut: function(oViz, data, groupField, title) {
-			var map = {};
-			for (var i = 0; i < data.length; i++) {
+			var map = {}, i;
+			for (i = 0; i < data.length; i++) {
 				var key = data[i][groupField] || "Unknown";
-				if (!map[key]) {
-					map[key] = 0;
-				}
-				map[key]++;
+				map[key] = (map[key] || 0) + 1;
 			}
 			var donutData = [];
 			for (var key in map) {
-				donutData.push({
-					label: key,
-					value: map[key]
-				});
+				donutData.push({ label: key, value: map[key] });
 			}
 
 			oViz.setVizType("donut");
 			oViz.setDataset(new FlattenedDataset({
-				dimensions: [{
-					name: "Material",
-					value: "{label}"
-				}],
-				measures: [{
-					name: "Count",
-					value: "{value}"
-				}],
-				data: {
-					path: "/"
-				}
+				dimensions: [{ name: "Material", value: "{label}" }],
+				measures: [{ name: "Count", value: "{value}" }],
+				data: { path: "/" }
 			}));
 			oViz.setModel(new JSONModel(donutData));
 			oViz.setVizProperties({
-				title: {
-					text: title,
-					visible: true
-				}
+				title: { text: title, visible: true }
 			});
 			oViz.removeAllFeeds();
-			oViz.addFeed(new FeedItem({
-				uid: "size",
-				type: "Measure",
-				values: ["Count"]
-			}));
-			oViz.addFeed(new FeedItem({
-				uid: "color",
-				type: "Dimension",
-				values: ["Material"]
-			}));
+			oViz.addFeed(new FeedItem({ uid: "size", type: "Measure", values: ["Count"] }));
+			oViz.addFeed(new FeedItem({ uid: "color", type: "Dimension", values: ["Material"] }));
 		},
 
 		_buildLine: function(oViz, data, dateField, title) {
-			var trendMap = {};
-			for (var i = 0; i < data.length; i++) {
+			var trendMap = {}, i;
+			for (i = 0; i < data.length; i++) {
 				var d = new Date(data[i][dateField]);
 				if (!isNaN(d.getTime())) {
 					var key = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2);
@@ -275,10 +214,7 @@ sap.ui.define([
 			}
 			var trendData = [];
 			for (var k in trendMap) {
-				trendData.push({
-					Period: k,
-					Count: trendMap[k]
-				});
+				trendData.push({ Period: k, Count: trendMap[k] });
 			}
 			trendData.sort(function(a, b) {
 				return a.Period > b.Period ? 1 : -1;
@@ -286,36 +222,17 @@ sap.ui.define([
 
 			oViz.setVizType("line");
 			oViz.setDataset(new FlattenedDataset({
-				dimensions: [{
-					name: "Period",
-					value: "{Period}"
-				}],
-				measures: [{
-					name: "Count",
-					value: "{Count}"
-				}],
-				data: {
-					path: "/"
-				}
+				dimensions: [{ name: "Period", value: "{Period}" }],
+				measures: [{ name: "Count", value: "{Count}" }],
+				data: { path: "/" }
 			}));
 			oViz.setModel(new JSONModel(trendData));
 			oViz.setVizProperties({
-				title: {
-					text: title,
-					visible: true
-				}
+				title: { text: title, visible: true }
 			});
 			oViz.removeAllFeeds();
-			oViz.addFeed(new FeedItem({
-				uid: "valueAxis",
-				type: "Measure",
-				values: ["Count"]
-			}));
-			oViz.addFeed(new FeedItem({
-				uid: "categoryAxis",
-				type: "Dimension",
-				values: ["Period"]
-			}));
+			oViz.addFeed(new FeedItem({ uid: "valueAxis", type: "Measure", values: ["Count"] }));
+			oViz.addFeed(new FeedItem({ uid: "categoryAxis", type: "Dimension", values: ["Period"] }));
 		}
 	});
 });
