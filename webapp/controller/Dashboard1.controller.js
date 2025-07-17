@@ -3,38 +3,51 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/viz/ui5/data/FlattenedDataset",
 	"sap/viz/ui5/controls/common/feeds/FeedItem",
-	"sap/m/MessageToast"
-], function(Controller, JSONModel, FlattenedDataset, FeedItem, MessageToast) {
+	"sap/m/MessageToast",
+	"sap/m/MessageBox"
+], function(Controller, JSONModel, FlattenedDataset, FeedItem, MessageToast, MessageBox) {
 	"use strict";
 
 	return Controller.extend("QualityPortal.controller.Dashboard1", {
 
 		onInit: function() {
-			var oKpiModel = new JSONModel({
+			this.lotModel = new JSONModel({
 				totalLots: 0,
 				approved: 0,
 				rejected: 0,
-				results: []
+				results: [],
+				currentPage: 1,
+				pageSize: 10,
+				totalPages: 0,
+				pagedResults: []
 			});
-			this.kpiModel = oKpiModel;
-			this.getView().setModel(oKpiModel, "kpi");
+			this.getView().setModel(this.lotModel, "lot");
 		},
 
 		onLogout: function() {
-			sap.ui.core.UIComponent.getRouterFor(this).navTo("View1");
+			sap.m.MessageBox.confirm("Are you sure you want to logout?", {
+				title: "Confirm Logout",
+				icon: sap.m.MessageBox.Icon.QUESTION,
+				actions: [sap.m.MessageBox.Action.YES, sap.m.MessageBox.Action.NO],
+				emphasizedAction: sap.m.MessageBox.Action.YES,
+				onClose: function(oAction) {
+					if (oAction === sap.m.MessageBox.Action.YES) {
+						sap.ui.core.UIComponent.getRouterFor(this).navTo("View1");
+					}
+				}.bind(this)
+			});
 		},
-		onNavigateToDashboard3: function() {
-			sap.ui.core.UIComponent.getRouterFor(this).navTo("Dashboard3");
+		onBack: function() {
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("View2");
 		},
 
 		onApplyFilter: function() {
 			var sPlant = this.byId("plantSelect").getSelectedKey();
-
 			var sYear = this.byId("yearSelect").getSelectedKey();
 			var sMonth = this.byId("monthSelect").getSelectedKey();
 
 			if (!sPlant) {
-				MessageToast.show("Please enter a Plant ID");
+				MessageToast.show("Please select a plant.");
 				return;
 			}
 
@@ -46,95 +59,117 @@ sap.ui.define([
 				success: function(oData) {
 					var results = oData.results || [];
 
+					// Filter by year/month
 					if (sYear) {
 						results = results.filter(function(item) {
 							var rawDate = item.start_date;
-							var date = null;
-
-							if (rawDate instanceof Date) {
-								date = rawDate;
-							} else if (typeof rawDate === "string" || typeof rawDate === "number") {
-								date = new Date(rawDate);
-							}
-
-							if (!date || isNaN(date.getTime())) return false;
-
+							var date = (rawDate instanceof Date) ? rawDate : new Date(rawDate);
+							if (isNaN(date.getTime())) return false;
 							var matchYear = date.getFullYear().toString() === sYear;
-							var matchMonth = !sMonth || (String(date.getMonth() + 1).padStart(2, '0') === sMonth);
+							var matchMonth = !sMonth || (("0" + (date.getMonth() + 1)).slice(-2) === sMonth);
 							return matchYear && matchMonth;
 						});
 					}
 
-					var kpi = {
-						totalLots: results.length,
-						approved: results.filter(function(r) {
-							return r.usage_decision === "A";
-						}).length,
-						rejected: results.filter(function(r) {
-							return r.usage_decision === "R";
-						}).length,
-						results: results
-					};
-
-					that.kpiModel.setData(kpi);
-
-					if (that.byId("chartGrid")) {
-						that.byId("chartGrid").setVisible(true);
+					// KPI counts
+					var approved = 0,
+						rejected = 0;
+					for (var i = 0; i < results.length; i++) {
+						if (results[i].usage_decision === "A") approved++;
+						else if (results[i].usage_decision === "R") rejected++;
 					}
-					if (that.byId("tablePanel")) {
-						that.byId("tablePanel").setVisible(true);
-					}
+
+					var totalLots = results.length;
+					var pageSize = 10;
+					var totalPages = Math.ceil(totalLots / pageSize);
+
+					that.lotModel.setData({
+						totalLots: totalLots,
+						approved: approved,
+						rejected: rejected,
+						results: results,
+						currentPage: 1,
+						pageSize: pageSize,
+						totalPages: totalPages,
+						pagedResults: results.slice(0, pageSize)
+					});
 
 					that._updateBarChart(results);
 					that._updateDonutChart(results);
 					that._updateLineChart(results);
 				},
 				error: function() {
-					MessageToast.show("Failed to fetch records.");
+					MessageToast.show("Failed to fetch inspection records.");
 				}
 			});
 		},
 
+		onNextPage: function() {
+			var model = this.getView().getModel("lot");
+			var currentPage = model.getProperty("/currentPage");
+			var totalPages = model.getProperty("/totalPages");
+
+			if (currentPage < totalPages) {
+				model.setProperty("/currentPage", currentPage + 1);
+				this._updatePagedResults();
+			}
+		},
+
+		onPrevPage: function() {
+			var model = this.getView().getModel("lot");
+			var currentPage = model.getProperty("/currentPage");
+
+			if (currentPage > 1) {
+				model.setProperty("/currentPage", currentPage - 1);
+				this._updatePagedResults();
+			}
+		},
+
+		_updatePagedResults: function() {
+			var model = this.getView().getModel("lot");
+			var allResults = model.getProperty("/results");
+			var page = model.getProperty("/currentPage");
+			var size = model.getProperty("/pageSize");
+
+			var start = (page - 1) * size;
+			var end = start + size;
+			model.setProperty("/pagedResults", allResults.slice(start, end));
+		},
+
 		_updateBarChart: function(data) {
-			// Mapping of inspection type codes to labels
 			var typeLabels = {
 				"01": "Goods Receipt",
 				"02": "In-Process",
-				"03": "Final Inspection",
+				"03": "Final",
 				"04": "Production",
 				"05": "Audit",
 				"": "Unknown"
 			};
 
-			var grouped = {};
-
+			var typeMap = {};
 			for (var i = 0; i < data.length; i++) {
-				var item = data[i];
-				var code = item.inspection_type || "";
-				var type = typeLabels[code] || "Other";
-
-				if (!grouped[type]) {
-					grouped[type] = {
-						inspection_type: type,
+				var code = data[i].inspection_type || "";
+				var label = typeLabels[code] || code;
+				if (!typeMap[label]) {
+					typeMap[label] = {
+						inspection_type: label,
 						Approved: 0,
 						Rejected: 0
 					};
 				}
-
-				if (item.usage_decision === "A") {
-					grouped[type].Approved++;
-				} else if (item.usage_decision === "R") {
-					grouped[type].Rejected++;
+				if (data[i].usage_decision === "A") {
+					typeMap[label].Approved++;
+				} else if (data[i].usage_decision === "R") {
+					typeMap[label].Rejected++;
 				}
 			}
 
 			var chartData = [];
-			for (var key in grouped) {
-				chartData.push(grouped[key]);
+			for (var key in typeMap) {
+				chartData.push(typeMap[key]);
 			}
 
 			var oViz = this.byId("barChart");
-
 			oViz.setDataset(new FlattenedDataset({
 				dimensions: [{
 					name: "Inspection Type",
@@ -151,7 +186,6 @@ sap.ui.define([
 					path: "/"
 				}
 			}));
-
 			oViz.setModel(new JSONModel(chartData));
 			oViz.setVizProperties({
 				title: {
@@ -159,7 +193,6 @@ sap.ui.define([
 					visible: true
 				}
 			});
-
 			oViz.removeAllFeeds();
 			oViz.addFeed(new FeedItem({
 				uid: "valueAxis",
@@ -171,10 +204,12 @@ sap.ui.define([
 				type: "Dimension",
 				values: ["Inspection Type"]
 			}));
+
+			new sap.viz.ui5.controls.VizTooltip().connect(oViz.getVizUid());
 		},
 
 		_updateDonutChart: function(data) {
-			var materialDescriptions = {
+			var materialLabels = {
 				"FG": "Finished Goods",
 				"RM": "Raw Material",
 				"SFG": "Semi-Finished Goods",
@@ -184,28 +219,25 @@ sap.ui.define([
 				"": "Unknown"
 			};
 
-			var materialCountMap = {};
-
+			var materialMap = {};
 			for (var i = 0; i < data.length; i++) {
-				var matCode = data[i].material_text || "";
-				var mat = materialDescriptions[matCode] || matCode || "Other";
-
-				if (!materialCountMap[mat]) {
-					materialCountMap[mat] = 0;
+				var code = data[i].material_text || "";
+				var label = materialLabels[code] || code;
+				if (!materialMap[label]) {
+					materialMap[label] = 0;
 				}
-				materialCountMap[mat]++;
+				materialMap[label]++;
 			}
 
-			var donutData = [];
-			for (var key in materialCountMap) {
-				donutData.push({
+			var chartData = [];
+			for (var key in materialMap) {
+				chartData.push({
 					label: key,
-					value: materialCountMap[key]
+					value: materialMap[key]
 				});
 			}
 
 			var oViz = this.byId("donutChart");
-
 			oViz.setVizType("donut");
 			oViz.setDataset(new FlattenedDataset({
 				dimensions: [{
@@ -220,15 +252,13 @@ sap.ui.define([
 					path: "/"
 				}
 			}));
-
-			oViz.setModel(new JSONModel(donutData));
+			oViz.setModel(new JSONModel(chartData));
 			oViz.setVizProperties({
 				title: {
 					text: "Lots by Material Type",
 					visible: true
 				}
 			});
-
 			oViz.removeAllFeeds();
 			oViz.addFeed(new FeedItem({
 				uid: "size",
@@ -240,42 +270,30 @@ sap.ui.define([
 				type: "Dimension",
 				values: ["Material Type"]
 			}));
+
+			new sap.viz.ui5.controls.VizTooltip().connect(oViz.getVizUid());
 		},
 
 		_updateLineChart: function(data) {
-			var trendMap = {};
-			for (var i = 0; i < data.length; i++) {
-				var item = data[i];
-				var rawDate = item.start_date;
-				var date = null;
-
-				if (rawDate instanceof Date) {
-					date = rawDate;
-				} else if (typeof rawDate === "string" || typeof rawDate === "number") {
-					date = new Date(rawDate);
-				}
-
-				if (!date || isNaN(date.getTime())) continue;
-
-				var key = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0');
-
-				if (!trendMap[key]) {
-					trendMap[key] = 0;
-				}
-				trendMap[key]++;
+			var trendMap = {},
+				i;
+			for (i = 0; i < data.length; i++) {
+				var d = new Date(data[i].start_date);
+				if (isNaN(d.getTime())) continue;
+				var key = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2);
+				trendMap[key] = (trendMap[key] || 0) + 1;
 			}
 
-			var trendData = [];
+			var chartData = [];
 			var keys = Object.keys(trendMap).sort();
-			for (var j = 0; j < keys.length; j++) {
-				trendData.push({
-					Period: keys[j],
-					Count: trendMap[keys[j]]
+			for (i = 0; i < keys.length; i++) {
+				chartData.push({
+					Period: keys[i],
+					Count: trendMap[keys[i]]
 				});
 			}
 
 			var oViz = this.byId("lineChart");
-
 			oViz.setDataset(new FlattenedDataset({
 				dimensions: [{
 					name: "Period",
@@ -289,13 +307,13 @@ sap.ui.define([
 					path: "/"
 				}
 			}));
+			oViz.setModel(new JSONModel(chartData));
 			oViz.setVizProperties({
 				title: {
 					text: "Monthly Result Entry Trend",
 					visible: true
 				}
 			});
-			oViz.setModel(new JSONModel(trendData));
 			oViz.removeAllFeeds();
 			oViz.addFeed(new FeedItem({
 				uid: "valueAxis",
@@ -308,6 +326,5 @@ sap.ui.define([
 				values: ["Period"]
 			}));
 		}
-
 	});
 });

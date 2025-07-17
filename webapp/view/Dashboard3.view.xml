@@ -1,5 +1,5 @@
 <mvc:View controllerName="QualityPortal.controller.Dashboard3" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:layout="sap.ui.layout"
-	xmlns:core="sap.ui.core" xmlns:viz="sap.viz.ui5.controls">
+	xmlns:viz="sap.viz.ui5.controls" xmlns:core="sap.ui.core" xmlns:suite="sap.suite.ui.commons">
 	<Page>
 		<customHeader>
 			<Bar>
@@ -10,20 +10,19 @@
 					<Title text="Usage Decision Dashboard - Quality Portal"/>
 				</contentMiddle>
 				<contentRight>
-					<Button text="Next" icon="sap-icon://navigation-right-arrow" press="onNavigateToDashboard1"/>
+					<Button icon="sap-icon://log" text="Logout" press="onLogout"/>
 				</contentRight>
 			</Bar>
 		</customHeader>
 		<content>
 			<!-- Filter Bar -->
 			<HBox class="sapUiSmallMargin" alignItems="Center" justifyContent="SpaceBetween">
-				<Select id="plantSelect" width="250px" change="onFilterChange">
+				<Select id="plantSelect" width="200px">
 					<items>
-						<core:ListItem key="0001" text="Werk 0001" icon="sap-icon://factory"/>
-						<core:ListItem key="0003" text="Plant 0003 (is-ht-sw)" icon="sap-icon://building"/>
-						<core:ListItem key="1009" text="Kaar" icon="sap-icon://home"/>
-						<core:ListItem key="2206" text="Amul" icon="sap-icon://nutrition-activity"/>
-						<core:ListItem key="Z001" text="Werk 0001" icon="sap-icon://factory"/>
+						<core:Item key="0001" text="Werk 0001"/>
+						<core:Item key="0003" text="Plant 0003"/>
+						<core:Item key="1009" text="Kaar"/>
+						<core:Item key="2206" text="Amul"/>
 					</items>
 				</Select>
 				<Select id="yearSelectUD" width="150px">
@@ -33,76 +32,86 @@
 				</Select>
 				<Select id="monthSelectUD" width="150px">
 					<core:Item key="" text="All Months"/>
-					<core:Item key="01" text="January"/>
-					<core:Item key="02" text="February"/>
-					<core:Item key="03" text="March"/>
-					<core:Item key="04" text="April"/>
+					<core:Item key="01" text="Jan"/>
+					<core:Item key="02" text="Feb"/>
+					<core:Item key="03" text="Mar"/>
+					<core:Item key="04" text="Apr"/>
 					<core:Item key="05" text="May"/>
-					<core:Item key="06" text="June"/>
-					<core:Item key="07" text="July"/>
-					<core:Item key="08" text="August"/>
-					<core:Item key="09" text="September"/>
-					<core:Item key="10" text="October"/>
-					<core:Item key="11" text="November"/>
-					<core:Item key="12" text="December"/>
+					<core:Item key="06" text="Jun"/>
+					<core:Item key="07" text="Jul"/>
+					<core:Item key="08" text="Aug"/>
+					<core:Item key="09" text="Sep"/>
+					<core:Item key="10" text="Oct"/>
+					<core:Item key="11" text="Nov"/>
+					<core:Item key="12" text="Dec"/>
 				</Select>
-				<Button text="Apply Filter" press="onApplyFilter"/>
+				<Button text="Apply Filter" press="onApplyFilter" icon="sap-icon://filter"/>
 			</HBox>
 			<!-- KPI Cards -->
-			<layout:Grid defaultSpan="L4 M6 S12" class="sapUiMediumMarginTop">
-				<Panel headerText="Total Lots" class="cardPanel">
-					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiTotalUD" number="{ud>/total}" unit="Lots"/>
-					</VBox>
-				</Panel>
-				<Panel headerText="Accepted" class="cardPanel">
-					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiApprovedUD" number="{ud>/approved}" unit="Accepted" state="Success"/>
-					</VBox>
-				</Panel>
-				<Panel headerText="Rejected" class="cardPanel">
-					<VBox class="sapUiSmallMargin">
-						<ObjectNumber id="kpiRejectedUD" number="{ud>/rejected}" unit="Rejected" state="Error"/>
-					</VBox>
-				</Panel>
-			</layout:Grid>
-			<!-- Charts -->
 			<layout:Grid defaultSpan="L4 M4 S12" class="sapUiMediumMarginTop">
-				<Panel class="cardPanel">
-					<viz:VizFrame id="udChart1" vizType="stacked_column" width="100%" height="300px"/>
-				</Panel>
-				<Panel class="cardPanel">
-					<viz:VizFrame id="udChart2" vizType="stacked_column" width="100%" height="300px"/>
-				</Panel>
-				<Panel class="cardPanel">
-					<viz:VizFrame id="udChart3" vizType="stacked_column" width="100%" height="300px"/>
-				</Panel>
+				<VBox class="cardPanel" alignItems="Center">
+					<core:Icon src="sap-icon://multi-select" size="2rem"/>
+					<Title text="Total Lots"/>
+					<ObjectNumber number="{ud>/total}" unit="Lots"/>
+				</VBox>
+				<VBox class="cardPanel" alignItems="Center">
+					<core:Icon src="sap-icon://accept" size="2rem" color="#107e3e"/>
+					<Title text="Accepted"/>
+					<ObjectNumber number="{ud>/approved}" unit="Accepted" state="Success"/>
+				</VBox>
+				<VBox class="cardPanel" alignItems="Center">
+					<core:Icon src="sap-icon://decline" size="2rem" color="#bb0000"/>
+					<Title text="Rejected"/>
+					<ObjectNumber number="{ud>/rejected}" unit="Rejected" state="Error"/>
+				</VBox>
 			</layout:Grid>
-			<!-- Table -->
-			<Panel headerText="Usage Decision Records Table" class="cardTable sapUiMediumMarginTop">
-				<Table id="udTable" items="{ud>/results}" growing="true" growingScrollToLoad="true" noDataText="No usage decision records found">
-					<columns>
-						<Column width="150px"><Text text="Inspection Lot"/></Column>
-						<Column width="100px"><Text text="Material"/></Column>
-						<Column width="150px"><Text text="Inspection Type"/></Column>
-						<Column width="150px"><Text text="Usage Decision"/></Column>
-						<Column width="100px"><Text text="Object Type"/></Column>
-						<Column width="100px"><Text text="Status"/></Column>
-					</columns>
-					<items>
-						<ColumnListItem>
-							<cells>
-								<Text text="{ud>inspection_lot}"/>
-								<Text text="{ud>material}"/>
-								<Text text="{ud>inspection_type}"/>
-								<Text text="{ud>usage_decision_text}"/>
-								<Text text="{ud>object_type}"/>
-								<Text text="{ud>status}"/>
-							</cells>
-						</ColumnListItem>
-					</items>
-				</Table>
-			</Panel>
+			<suite:ChartContainer id="chartContainer" title="Usage Decision details" showZoom="true" autoAdjustHeight="true"
+				class="sapUiMediumMarginTop">
+				<suite:content>
+					<suite:ChartContainerContent icon="sap-icon://table-view" title="Usage Decision Table">
+						<suite:content>
+							<VBox>
+								<Toolbar>
+									<Button icon="sap-icon://nav-back" press="onPrevPage"/>
+									<Text text="{= 'Page ' + ${ud>/currentPage} + ' of ' + ${ud>/totalPages}}"/>
+									<Button icon="sap-icon://navigation-right-arrow" press="onNextPage"/>
+								</Toolbar>
+								<Table id="udTable" items="{ud>/pagedResults}">
+									<columns>
+										<Column><Text text="Inspection Lot"/></Column>
+										<Column><Text text="Material"/></Column>
+										<Column><Text text="Type"/></Column>
+										<Column><Text text="Usage Decision"/></Column>
+										<Column><Text text="Object Type"/></Column>
+										<Column><Text text="Status"/></Column>
+									</columns>
+									<items>
+										<ColumnListItem>
+											<cells>
+												<Text text="{ud>inspection_lot}"/>
+												<Text text="{ud>material}"/>
+												<Text text="{ud>inspection_type}"/>
+												<Text text="{ud>usage_decision_text}"/>
+												<Text text="{ud>object_type}"/>
+												<Text text="{ud>status}"/>
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+							</VBox>
+						</suite:content>
+					</suite:ChartContainerContent>
+					<suite:ChartContainerContent icon="sap-icon://group" title="By Inspection Type">
+						<suite:content><viz:VizFrame id="udChart1" height="400px"/></suite:content>
+					</suite:ChartContainerContent>
+					<suite:ChartContainerContent icon="sap-icon://product" title="By Material">
+						<suite:content><viz:VizFrame id="udChart2" height="400px"/></suite:content>
+					</suite:ChartContainerContent>
+					<suite:ChartContainerContent icon="sap-icon://pie-chart" title="By Status">
+						<suite:content><viz:VizFrame id="udChart3" height="400px"/></suite:content>
+					</suite:ChartContainerContent>
+				</suite:content>
+			</suite:ChartContainer>
 		</content>
 	</Page>
 </mvc:View>

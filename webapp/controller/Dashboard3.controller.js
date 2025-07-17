@@ -4,14 +4,22 @@ sap.ui.define([
 	"sap/ui/model/odata/v2/ODataModel",
 	"sap/viz/ui5/data/FlattenedDataset",
 	"sap/viz/ui5/controls/common/feeds/FeedItem",
-	"sap/m/MessageToast"
-], function(Controller, JSONModel, ODataModel, FlattenedDataset, FeedItem, MessageToast) {
+	"sap/viz/ui5/controls/VizTooltip",
+	"sap/m/MessageToast",
+	"sap/m/MessageBox" 
+], function(Controller, JSONModel, ODataModel, FlattenedDataset, FeedItem, VizTooltip, MessageToast, MessageBox) {
+
 	"use strict";
 
 	return Controller.extend("QualityPortal.controller.Dashboard3", {
+
 		onInit: function() {
 			this.udModel = new JSONModel({
 				results: [],
+				pagedResults: [],
+				currentPage: 1,
+				pageSize: 10,
+				totalPages: 1,
 				total: 0,
 				approved: 0,
 				rejected: 0
@@ -20,17 +28,47 @@ sap.ui.define([
 		},
 
 		onBack: function() {
-			sap.ui.core.UIComponent.getRouterFor(this).navTo("Dashboard2");
+			sap.ui.core.UIComponent.getRouterFor(this).navTo("View2");
 		},
-		onNavigateToDashboard1: function() {
-			sap.ui.core.UIComponent.getRouterFor(this).navTo("Dashboard1");
-		},
+
 		onLogout: function() {
-			sap.ui.core.UIComponent.getRouterFor(this).navTo("View1");
+			sap.m.MessageBox.confirm("Are you sure you want to logout?", {
+				title: "Confirm Logout",
+				icon: sap.m.MessageBox.Icon.QUESTION,
+				actions: [sap.m.MessageBox.Action.YES, sap.m.MessageBox.Action.NO],
+				emphasizedAction: sap.m.MessageBox.Action.YES,
+				onClose: function(oAction) {
+					if (oAction === sap.m.MessageBox.Action.YES) {
+						sap.ui.core.UIComponent.getRouterFor(this).navTo("View1");
+					}
+				}.bind(this)
+			});
+		},
+
+		onPrevPage: function() {
+			var model = this.getView().getModel("ud");
+			var page = model.getProperty("/currentPage");
+			if (page > 1) {
+				model.setProperty("/currentPage", page - 1);
+				this._updatePagedResults();
+			}
+		},
+
+		onNextPage: function() {
+			var model = this.getView().getModel("ud");
+			var page = model.getProperty("/currentPage");
+			var total = model.getProperty("/totalPages");
+			if (page < total) {
+				model.setProperty("/currentPage", page + 1);
+				this._updatePagedResults();
+			}
 		},
 
 		onApplyFilter: function() {
 			var sPlant = this.byId("plantSelect").getSelectedKey();
+			var sYear = this.byId("yearSelectUD").getSelectedKey();
+			var sMonth = this.byId("monthSelectUD").getSelectedKey();
+
 			if (!sPlant) {
 				MessageToast.show("Please enter Plant ID");
 				return;
@@ -43,7 +81,21 @@ sap.ui.define([
 			oModel.read(sPath, {
 				success: function(oData) {
 					var results = oData.results || [];
-					//console.log("usage Decision Results:", results);
+
+					if (sYear) {
+						results = results.filter(function(item) {
+							var rawDate = item.start_date;
+							if (!rawDate) return true;
+
+							var date = new Date(rawDate);
+							if (isNaN(date.getTime())) return true;
+
+							var yearMatch = date.getFullYear().toString() === sYear;
+							var monthMatch = !sMonth || ("0" + (date.getMonth() + 1)).slice(-2) === sMonth;
+							return yearMatch && monthMatch;
+						});
+					}
+
 					that._updateDashboard(results);
 				},
 				error: function() {
@@ -53,64 +105,101 @@ sap.ui.define([
 		},
 
 		_updateDashboard: function(results) {
+			var approved = 0,
+				rejected = 0,
+				i;
+
+			for (i = 0; i < results.length; i++) {
+				if (results[i].usage_decision_text === "Accepted") approved++;
+				else if (results[i].usage_decision_text === "Rejected") rejected++;
+			}
+
 			var total = results.length;
-			var approved = results.filter(function(r) {
-				return r.usage_decision_text === "Accepted";
-			}).length;
-			var rejected = results.filter(function(r) {
-				return r.usage_decision_text === "Rejected";
-			}).length;
+			var pageSize = 10;
+			var totalPages = total > 0 ? Math.ceil(total / pageSize) : 1;
 
 			this.udModel.setData({
 				results: results,
+				currentPage: 1,
+				pageSize: pageSize,
+				totalPages: totalPages,
+				pagedResults: results.slice(0, pageSize),
 				total: total,
 				approved: approved,
 				rejected: rejected
 			});
-
-			this.byId("kpiTotalUD").setNumber(total);
-			this.byId("kpiApprovedUD").setNumber(approved);
-			this.byId("kpiRejectedUD").setNumber(rejected);
 
 			this._buildChart(this.byId("udChart1"), results, "inspection_type", "Usage Decision by Inspection Type");
 			this._buildChart(this.byId("udChart2"), results, "material", "Usage Decision by Material");
 			this._buildChart(this.byId("udChart3"), results, "status", "Usage Decision by Status");
 		},
 
-		_buildChart: function(oViz, data, groupField, title) {
-			if (!data.length) {
-				oViz.setModel(new JSONModel([]));
-				oViz.setDataset(null);
-				return;
-			}
+		_updatePagedResults: function() {
+			var model = this.getView().getModel("ud");
+			var data = model.getProperty("/results");
+			var page = model.getProperty("/currentPage");
+			var size = model.getProperty("/pageSize");
+			var start = (page - 1) * size;
+			var end = start + size;
+			model.setProperty("/pagedResults", data.slice(start, end));
+		},
 
-			var map = {};
-			data.forEach(function(item) {
+		_buildChart: function(oViz, data, groupField, title) {
+			var map = {},
+				i;
+
+			for (i = 0; i < data.length; i++) {
+				var item = data[i];
 				var key = item[groupField] || "Unknown";
+
 				if (!map[key]) {
 					map[key] = {
+						label: key,
 						Accepted: 0,
 						Rejected: 0
 					};
 				}
-				if (item.usage_decision_text === "Accepted") map[key].Accepted++;
-				else if (item.usage_decision_text === "Rejected") map[key].Rejected++;
-			});
+				if (item.usage_decision_text === "Accepted") {
+					map[key].Accepted++;
+				} else if (item.usage_decision_text === "Rejected") {
+					map[key].Rejected++;
+				}
+			}
 
-			var chartData = Object.keys(map).map(function(key) {
-				return {
-					label: key,
-					Accepted: map[key].Accepted,
-					Rejected: map[key].Rejected
+			var chartData = [],
+				isPie = false;
+
+			if (groupField === "status") {
+				isPie = true;
+				var pieMap = {
+					"Accepted": 0,
+					"Rejected": 0
 				};
-			});
+				for (var key in map) {
+					pieMap["Accepted"] += map[key].Accepted;
+					pieMap["Rejected"] += map[key].Rejected;
+				}
+				for (var label in pieMap) {
+					chartData.push({
+						label: label,
+						value: pieMap[label]
+					});
+				}
+			} else {
+				for (var key2 in map) {
+					chartData.push(map[key2]);
+				}
+			}
 
 			oViz.setDataset(new FlattenedDataset({
 				dimensions: [{
 					name: "Category",
 					value: "{label}"
 				}],
-				measures: [{
+				measures: isPie ? [{
+					name: "Count",
+					value: "{value}"
+				}] : [{
 					name: "Accepted",
 					value: "{Accepted}"
 				}, {
@@ -121,7 +210,9 @@ sap.ui.define([
 					path: "/"
 				}
 			}));
+
 			oViz.setModel(new JSONModel(chartData));
+			oViz.setVizType(isPie ? "pie" : "stacked_column");
 			oViz.setVizProperties({
 				title: {
 					text: title,
@@ -129,16 +220,32 @@ sap.ui.define([
 				}
 			});
 			oViz.removeAllFeeds();
-			oViz.addFeed(new FeedItem({
-				uid: "valueAxis",
-				type: "Measure",
-				values: ["Accepted", "Rejected"]
-			}));
-			oViz.addFeed(new FeedItem({
-				uid: "categoryAxis",
-				type: "Dimension",
-				values: ["Category"]
-			}));
+
+			if (isPie) {
+				oViz.addFeed(new FeedItem({
+					uid: "size",
+					type: "Measure",
+					values: ["Count"]
+				}));
+				oViz.addFeed(new FeedItem({
+					uid: "color",
+					type: "Dimension",
+					values: ["Category"]
+				}));
+			} else {
+				oViz.addFeed(new FeedItem({
+					uid: "valueAxis",
+					type: "Measure",
+					values: ["Accepted", "Rejected"]
+				}));
+				oViz.addFeed(new FeedItem({
+					uid: "categoryAxis",
+					type: "Dimension",
+					values: ["Category"]
+				}));
+			}
+
+			new VizTooltip().connect(oViz.getVizUid());
 		}
 	});
 });

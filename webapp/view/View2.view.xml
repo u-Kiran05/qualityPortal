@@ -1,0 +1,64 @@
+<mvc:View controllerName="QualityPortal.controller.View2"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:layout="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+	displayBlock="true">
+	
+	<Page>
+		<customHeader>
+			<Bar>
+				<contentMiddle>
+					<Title text="Quality Portal - Choose Dashboard"/>
+				</contentMiddle>
+				<contentRight>
+					<Button icon="sap-icon://log" text="Logout" press="onLogout"/>
+				</contentRight>
+			</Bar>
+		</customHeader>
+
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<HBox justifyContent="Center" wrap="Wrap">
+					
+					<VBox class="sapUiSmallMargin" width="220px">
+						<GenericTile header="Inspection Lot Dashboard" subheader="Quality Portal" press="onInspectionPress">
+							<tileContent>
+								<TileContent>
+									<content>
+										<ImageContent src="sap-icon://inspection" description="Inspection"/>
+									</content>
+								</TileContent>
+							</tileContent>
+						</GenericTile>
+					</VBox>
+
+					<VBox class="sapUiSmallMargin" width="220px">
+						<GenericTile header="Usage Decision Dashboard" subheader="Quality Portal" press="onUsageDecisionPress">
+							<tileContent>
+								<TileContent>
+									<content>
+										<ImageContent src="sap-icon://decision" description="Usage Decision"/>
+									</content>
+								</TileContent>
+							</tileContent>
+						</GenericTile>
+					</VBox>
+
+					<VBox class="sapUiSmallMargin" width="220px">
+						<GenericTile header="Result Recording Dashboard" subheader="Quality Portal" press="onResultRecordingPress">
+							<tileContent>
+								<TileContent>
+									<content>
+										<ImageContent src="sap-icon://activity-individual" description="Result Recording"/>
+									</content>
+								</TileContent>
+							</tileContent>
+						</GenericTile>
+					</VBox>
+
+				</HBox>
+			</VBox>
+		</content>
+	</Page>
+</mvc:View>

@@ -3,16 +3,64 @@
     margin: 0.5rem;
     background-color: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.cardPanel .sapMTitle {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+.ehsmLoginPage {
+    background-image: url("https://cdn.imgchest.com/files/7mmc9nweqp7.png");
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+}
+
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.loginCard {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 350px;
+}
+
+.logoBox {
+    margin-bottom: 2rem;
+}
+
+.logoText {
+    color: white;
+    margin-left: 0.5rem;
+    font-size: 2rem;
+}
+
+.loginInput {
+    margin-bottom: 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid transparent;
     border-radius: 12px;
 }
 
-.cardTable {
-    padding: 1rem;
-    margin-top: 0.5rem;
-    background-color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
+.loginButton {
+    margin: 0 auto;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    display: block;
 }
-
-
-
