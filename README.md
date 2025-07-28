@@ -28,7 +28,7 @@ Use the following credentials to explore the demo environment:
 
 ## 📱 Quick Access via QR Code
 
-Scan the QR code below to open the app directly on your mobile device:
+Scan the QR code below to open the app directly on your mobile/Tablet device:
 
 <p align="center">
   <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://8b47c4b1trial.launchpad.cfapps.us10.hana.ondemand.com/4b569ecf-fb73-4442-874f-9173b58dfd31.QualityPortal.QualityPortal-1.0.0" alt="Quality Portal QR Code">
