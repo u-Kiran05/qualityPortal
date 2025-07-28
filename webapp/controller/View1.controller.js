@@ -22,32 +22,44 @@ sap.ui.define([
 				return;
 			}
 
-			var oModel = new sap.ui.model.odata.v2.ODataModel("/sap/opu/odata/sap/ZPP_QLOGIN_V_CDS/");
-			var sPath = "/ZPP_QLOGIN_V(p_bname='" + sUser + "',p_pass='" + encodeURIComponent(sPass) + "')/Set";
+			var oModel = this.getOwnerComponent().getModel("ZPPModel");
+			if (!oModel) {
+				oMsgStrip.setVisible(true);
+				oMsgStrip.setText("Login model not found.");
+				oMsgStrip.setType("Error");
+				return;
+			}
 
+			var sPath = "/ZPP_QLOGIN_V(p_bname='" + sUser + "',p_pass='" + encodeURIComponent(sPass) + "')/Set";
 			var that = this;
 
-			oModel.read(sPath, {
-				success: function(oData) {
-					var result = oData.results && oData.results[0];
-					if (result && result.login_status === "Y") {
-						oMsgStrip.setVisible(true);
-						oMsgStrip.setText("Login successful!");
-						oMsgStrip.setType("Success");
+			oModel.metadataLoaded().then(function () {
+				oModel.read(sPath, {
+					success: function(oData) {
+						var result = oData.results && oData.results[0];
+						if (result && result.login_status === "Y") {
+							oMsgStrip.setVisible(true);
+							oMsgStrip.setText("Login successful!");
+							oMsgStrip.setType("Success");
 
-						var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-						oRouter.navTo("View2");
-					} else {
+							var oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+							oRouter.navTo("View2");
+						} else {
+							oMsgStrip.setVisible(true);
+							oMsgStrip.setText("Invalid username or password.");
+							oMsgStrip.setType("Error");
+						}
+					},
+					error: function() {
 						oMsgStrip.setVisible(true);
-						oMsgStrip.setText("Invalid username or password.");
+						oMsgStrip.setText("Server error during login. Please try again.");
 						oMsgStrip.setType("Error");
 					}
-				},
-				error: function() {
-					oMsgStrip.setVisible(true);
-					oMsgStrip.setText("Server error during login. Please try again.");
-					oMsgStrip.setType("Error");
-				}
+				});
+			}).catch(function () {
+				oMsgStrip.setVisible(true);
+				oMsgStrip.setText("Metadata load failed.");
+				oMsgStrip.setType("Error");
 			});
 		}
 	});
