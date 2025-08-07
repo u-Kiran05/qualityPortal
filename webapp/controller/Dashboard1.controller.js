@@ -51,56 +51,57 @@ sap.ui.define([
 				return;
 			}
 
-			var oModel = new sap.ui.model.odata.v2.ODataModel("/sap/opu/odata/sap/ZQM_RESRECORDS_CDS/");
+			var oModel = this.getOwnerComponent().getModel("ZRESModel");
 			var sPath = "/ZQM_RESRECORDS(p_plant='" + sPlant + "')/Set";
 			var that = this;
-
-			oModel.read(sPath, {
-				success: function(oData) {
-					var results = oData.results || [];
-
-					// Filter by year/month
-					if (sYear) {
-						results = results.filter(function(item) {
-							var rawDate = item.start_date;
-							var date = (rawDate instanceof Date) ? rawDate : new Date(rawDate);
-							if (isNaN(date.getTime())) return false;
-							var matchYear = date.getFullYear().toString() === sYear;
-							var matchMonth = !sMonth || (("0" + (date.getMonth() + 1)).slice(-2) === sMonth);
-							return matchYear && matchMonth;
+			
+			oModel.metadataLoaded().then(function () {
+				oModel.read(sPath, {
+					success: function (oData) {
+						var results = oData.results || [];
+			
+						// Filter by year/month
+						if (sYear) {
+							results = results.filter(function (item) {
+								var rawDate = item.start_date;
+								var date = (rawDate instanceof Date) ? rawDate : new Date(rawDate);
+								if (isNaN(date.getTime())) return false;
+								var matchYear = date.getFullYear().toString() === sYear;
+								var matchMonth = !sMonth || (("0" + (date.getMonth() + 1)).slice(-2) === sMonth);
+								return matchYear && matchMonth;
+							});
+						}
+			
+						// KPI counts
+						var approved = 0, rejected = 0;
+						for (var i = 0; i < results.length; i++) {
+							if (results[i].usage_decision === "A") approved++;
+							else if (results[i].usage_decision === "R") rejected++;
+						}
+			
+						var totalLots = results.length;
+						var pageSize = 10;
+						var totalPages = Math.ceil(totalLots / pageSize);
+			
+						that.lotModel.setData({
+							totalLots: totalLots,
+							approved: approved,
+							rejected: rejected,
+							results: results,
+							currentPage: 1,
+							pageSize: pageSize,
+							totalPages: totalPages,
+							pagedResults: results.slice(0, pageSize)
 						});
+			
+						that._updateBarChart(results);
+						that._updateDonutChart(results);
+						that._updateLineChart(results);
+					},
+					error: function () {
+						MessageToast.show("Failed to fetch inspection records.");
 					}
-
-					// KPI counts
-					var approved = 0,
-						rejected = 0;
-					for (var i = 0; i < results.length; i++) {
-						if (results[i].usage_decision === "A") approved++;
-						else if (results[i].usage_decision === "R") rejected++;
-					}
-
-					var totalLots = results.length;
-					var pageSize = 10;
-					var totalPages = Math.ceil(totalLots / pageSize);
-
-					that.lotModel.setData({
-						totalLots: totalLots,
-						approved: approved,
-						rejected: rejected,
-						results: results,
-						currentPage: 1,
-						pageSize: pageSize,
-						totalPages: totalPages,
-						pagedResults: results.slice(0, pageSize)
-					});
-
-					that._updateBarChart(results);
-					that._updateDonutChart(results);
-					that._updateLineChart(results);
-				},
-				error: function() {
-					MessageToast.show("Failed to fetch inspection records.");
-				}
+				});
 			});
 		},
 

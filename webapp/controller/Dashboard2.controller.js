@@ -74,31 +74,33 @@ sap.ui.define([
 			}
 
 			var that = this;
-			var oModel = new sap.ui.model.odata.v2.ODataModel("/sap/opu/odata/sap/ZQM_INSPECTIONLOT_CDS_CDS/");
+			var oModel = this.getOwnerComponent().getModel("ZINSModel");
 			var sPath = "/ZQM_INSPECTIONLOT_CDS(p_plant='" + sPlant + "')/Set";
 
-			oModel.read(sPath, {
-				success: function(oData) {
-					var results = oData.results || [];
+			oModel.metadataLoaded().then(function () {
+				oModel.read(sPath, {
+					success: function(oData) {
+						var results = oData.results || [];
 
-					// Filter by date
-					if (sYear) {
-						results = results.filter(function(item) {
-							var d = new Date(item.start_date);
-							if (isNaN(d.getTime())) return false;
-							var yearMatch = d.getFullYear().toString() === sYear;
-							var monthMatch = !sMonth || ("0" + (d.getMonth() + 1)).slice(-2) === sMonth;
-							return yearMatch && monthMatch;
-						});
+						if (sYear) {
+							results = results.filter(function(item) {
+								var d = new Date(item.start_date);
+								if (isNaN(d.getTime())) return false;
+								var yearMatch = d.getFullYear().toString() === sYear;
+								var monthMatch = !sMonth || ("0" + (d.getMonth() + 1)).slice(-2) === sMonth;
+								return yearMatch && monthMatch;
+							});
+						}
+
+						that._processData(results);
+					},
+					error: function() {
+						MessageToast.show("Failed to load inspection data");
 					}
-
-					that._processData(results);
-				},
-				error: function() {
-					MessageToast.show("Failed to load inspection data");
-				}
+				});
 			});
 		},
+
 
 		_processData: function(results) {
 			var typeMap = {},

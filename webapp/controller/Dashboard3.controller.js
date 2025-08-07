@@ -1,13 +1,12 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/model/odata/v2/ODataModel",
 	"sap/viz/ui5/data/FlattenedDataset",
 	"sap/viz/ui5/controls/common/feeds/FeedItem",
 	"sap/viz/ui5/controls/VizTooltip",
 	"sap/m/MessageToast",
-	"sap/m/MessageBox" 
-], function(Controller, JSONModel, ODataModel, FlattenedDataset, FeedItem, VizTooltip, MessageToast, MessageBox) {
+	"sap/m/MessageBox"
+], function(Controller, JSONModel, FlattenedDataset, FeedItem, VizTooltip, MessageToast, MessageBox) {
 
 	"use strict";
 
@@ -75,32 +74,34 @@ sap.ui.define([
 			}
 
 			var sPath = "/ZQM_USAGEDEF_V2(p_plant='" + sPlant + "')/Set";
-			var oModel = new ODataModel("/sap/opu/odata/sap/ZQM_USAGEDEF_V2_CDS/");
+			var oModel = this.getOwnerComponent().getModel("ZUDModel");
 			var that = this;
 
-			oModel.read(sPath, {
-				success: function(oData) {
-					var results = oData.results || [];
+			oModel.metadataLoaded().then(function () {
+				oModel.read(sPath, {
+					success: function(oData) {
+						var results = oData.results || [];
 
-					if (sYear) {
-						results = results.filter(function(item) {
-							var rawDate = item.start_date;
-							if (!rawDate) return true;
+						if (sYear) {
+							results = results.filter(function(item) {
+								var rawDate = item.start_date;
+								if (!rawDate) return true;
 
-							var date = new Date(rawDate);
-							if (isNaN(date.getTime())) return true;
+								var date = new Date(rawDate);
+								if (isNaN(date.getTime())) return true;
 
-							var yearMatch = date.getFullYear().toString() === sYear;
-							var monthMatch = !sMonth || ("0" + (date.getMonth() + 1)).slice(-2) === sMonth;
-							return yearMatch && monthMatch;
-						});
+								var yearMatch = date.getFullYear().toString() === sYear;
+								var monthMatch = !sMonth || ("0" + (date.getMonth() + 1)).slice(-2) === sMonth;
+								return yearMatch && monthMatch;
+							});
+						}
+
+						that._updateDashboard(results);
+					},
+					error: function() {
+						MessageToast.show("Error retrieving usage decision data.");
 					}
-
-					that._updateDashboard(results);
-				},
-				error: function() {
-					MessageToast.show("Error retrieving usage decision data.");
-				}
+				});
 			});
 		},
 

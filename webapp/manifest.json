@@ -1,173 +1,212 @@
 {
-	"_version": "1.7.0",
-	"sap.app": {
-		"id": "QualityPortal",
-		"type": "application",
-		"i18n": "i18n/i18n.properties",
-		"applicationVersion": {
-			"version": "1.0.0"
-		},
-		"title": "{{appTitle}}",
-		"description": "{{appDescription}}",
-		"sourceTemplate": {
-			"id": "servicecatalog.connectivityComponent",
-			"version": "0.0.0"
-		},
-		"dataSources": {
-			"ZPP_QLOGIN_V_CDS": {
-				"uri": "/sap/opu/odata/sap/ZPP_QLOGIN_V_CDS/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/metadata.xml"
-				}
-			},
-			"ZQM_RESRECORDS_CDS": {
-				"uri": "/sap/opu/odata/sap/ZQM_RESRECORDS_CDS/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/ZQM_RESRECORDS_CDS/metadata.xml"
-				}
-			},
-			"ZQM_INSPECTIONLOT_CDS_CDS": {
-				"uri": "/sap/opu/odata/sap/ZQM_INSPECTIONLOT_CDS_CDS/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/ZQM_INSPECTIONLOT_CDS_CDS/metadata.xml"
-				}
-			},
-			"ZQM_USAGEDEF_CDS": {
-				"uri": "/sap/opu/odata/sap/ZQM_USAGEDEF_CDS/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/ZQM_USAGEDEF_CDS/metadata.xml"
-				}
-			}
-		}
-	},
-	"sap.ui": {
-		"technology": "UI5",
-		"icons": {
-			"icon": "",
-			"favIcon": "",
-			"phone": "",
-			"phone@2": "",
-			"tablet": "",
-			"tablet@2": ""
-		},
-		"deviceTypes": {
-			"desktop": true,
-			"tablet": true,
-			"phone": true
-		},
-		"supportedThemes": [
-			"sap_hcb",
-			"sap_belize"
-		]
-	},
-	"sap.ui5": {
-		"rootView": {
-			"viewName": "QualityPortal.view.App",
-			"type": "XML",
-			"id": "app"
-		},
-		"dependencies": {
-			"minUI5Version": "1.30.0",
-			"libs": {
-				"sap.ui.core": {},
-				"sap.m": {},
-				"sap.ui.layout": {},
-				"sap.ushell": {},
-				"sap.collaboration": {},
-				"sap.ui.comp": {},
-				"sap.uxap": {}
-			}
-		},
-		"routing": {
-			"config": {
-				"routerClass": "sap.m.routing.Router",
-				"viewType": "XML",
-				"viewPath": "QualityPortal.view",
-				"controlId": "app",
-				"controlAggregation": "pages",
-				"transition": "fade",
-				"bypassed": {
-					"target": "View1"
-				},
-				"async": true
-			},
-			"routes": [{
-				"pattern": "",
-				"name": "View1",
-				"target": "View1"
-			}, {
-				"pattern": "dashboard",
-				"name": "Dashboard1",
-				"target": "Dashboard1"
-			}, {
-				"pattern": "View2",
-				"name": "View2",
-				"target": "View2"
-			}, {
-				"pattern": "dashboard2",
-				"name": "Dashboard2",
-				"target": "Dashboard2"
-			}, {
-				"pattern": "Dashboard3",
-				"name": "Dashboard3",
-				"target": "Dashboard3"
-			}],
-			"targets": {
-				"View1": {
-					"viewId": "View1",
-					"viewName": "View1",
-					"transition": "slide"
-				},
-				"View2": {
-					"viewId": "View2",
-					"viewName": "View2",
-					"transition": "slide"
-				},
-				"Dashboard1": {
-					"viewName": "Dashboard1",
-					"viewId": "Dashboard1",
-					"transition": "slide"
-				},
-				"Dashboard2": {
-					"viewName": "Dashboard2",
-					"viewId": "Dashboard2",
-					"transition": "slide"
-				},
-				"Dashboard3": {
-					"viewName": "Dashboard3",
-					"viewType": "XML",
-					"viewId": "Dashboard3",
-					"controlAggregation": "pages",
-					"controlId": "app",
-					"transition": "slide"
-				}
-
-			}
-		},
-		"contentDensities": {
-			"compact": true,
-			"cozy": true
-		},
-		"models": {
-			"i18n": {
-				"type": "sap.ui.model.resource.ResourceModel",
-				"settings": {
-					"bundleName": "QualityPortal.i18n.i18n"
-				}
-			}
-		},
-		"resources": {
-			"css": [{
-				"uri": "css/style.css"
-			}]
-		}
-	}
+  "_version": "1.7.0",
+  "sap.app": {
+    "id": "QualityPortal",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "sourceTemplate": {
+      "id": "servicecatalog.connectivityComponent",
+      "version": "0.0.0",
+      "toolsId": "4df65e73-5403-4a5a-b371-fc449a4c19f2"
+    },
+    "dataSources": {
+      "ZPP_QLOGIN_V_CDS": {
+        "uri": "/sap/opu/odata/sap/ZPP_QLOGIN_V_CDS/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "sap-client": "100",
+          "localUri": "localService/metadata.xml"
+        }
+      },
+      "ZQM_RESRECORDS_CDS": {
+        "uri": "/sap/opu/odata/sap/ZQM_RESRECORDS_CDS/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "sap-client": "100",
+          "localUri": "localService/ZQM_RESRECORDS_CDS/metadata.xml"
+        }
+      },
+      "ZQM_INSPECTIONLOT_CDS_CDS": {
+        "uri": "/sap/opu/odata/sap/ZQM_INSPECTIONLOT_CDS_CDS/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "sap-client": "100",
+          "localUri": "localService/ZQM_INSPECTIONLOT_CDS_CDS/metadata.xml"
+        }
+      },
+      "ZQM_USAGEDEF_CDS": {
+        "uri": "/sap/opu/odata/sap/ZQM_USAGEDEF_CDS/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/ZQM_USAGEDEF_CDS/metadata.xml"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    },
+    "supportedThemes": [
+      "sap_hcb",
+      "sap_belize"
+    ]
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "QualityPortal.view.App",
+      "type": "XML",
+      "id": "app"
+    },
+    "models": {
+      "ZPPModel": {
+        "dataSource": "ZPP_QLOGIN_V_CDS",
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "ZRESModel": {
+        "dataSource": "ZQM_RESRECORDS_CDS",
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "ZINSModel": {
+        "dataSource": "ZQM_INSPECTIONLOT_CDS_CDS",
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "ZUDModel": {
+        "dataSource": "ZQM_USAGEDEF_CDS",
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "QualityPortal.i18n.i18n"
+        }
+      }
+    },
+    "dependencies": {
+      "minUI5Version": "1.30.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {},
+        "sap.ui.layout": {},
+        "sap.ushell": {},
+        "sap.collaboration": {},
+        "sap.ui.comp": {},
+        "sap.uxap": {}
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "QualityPortal.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "transition": "fade",
+        "bypassed": {
+          "target": "View1"
+        },
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "View1",
+          "target": "View1"
+        },
+        {
+          "pattern": "dashboard",
+          "name": "Dashboard1",
+          "target": "Dashboard1"
+        },
+        {
+          "pattern": "View2",
+          "name": "View2",
+          "target": "View2"
+        },
+        {
+          "pattern": "dashboard2",
+          "name": "Dashboard2",
+          "target": "Dashboard2"
+        },
+        {
+          "pattern": "Dashboard3",
+          "name": "Dashboard3",
+          "target": "Dashboard3"
+        }
+      ],
+      "targets": {
+        "View1": {
+          "viewId": "View1",
+          "viewName": "View1",
+          "transition": "slide"
+        },
+        "View2": {
+          "viewId": "View2",
+          "viewName": "View2",
+          "transition": "slide"
+        },
+        "Dashboard1": {
+          "viewName": "Dashboard1",
+          "viewId": "Dashboard1",
+          "transition": "slide"
+        },
+        "Dashboard2": {
+          "viewName": "Dashboard2",
+          "viewId": "Dashboard2",
+          "transition": "slide"
+        },
+        "Dashboard3": {
+          "viewName": "Dashboard3",
+          "viewType": "XML",
+          "viewId": "Dashboard3",
+          "controlAggregation": "pages",
+          "controlId": "app",
+          "transition": "slide"
+        }
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "QualityPortal"
+  }
 }
