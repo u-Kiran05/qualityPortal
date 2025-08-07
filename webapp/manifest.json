@@ -43,11 +43,11 @@
         }
       },
       "ZQM_USAGEDEF_CDS": {
-        "uri": "/sap/opu/odata/sap/ZQM_USAGEDEF_CDS/",
+        "uri": "/sap/opu/odata/sap/ZQM_USAGEDEF_V2_CDS/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0",
-          "localUri": "localService/ZQM_USAGEDEF_CDS/metadata.xml"
+          "localUri": "localService/ZQM_USAGEDEF_V2_CDS/metadata.xml"
         }
       }
     }
